@@ -15,6 +15,10 @@ public class Gesture : ScriptableObject
     public enum GestureID
     {
         None = 0,
-        
+        Fist,
+        IndexMiddleUp,
+        IndexUp,
+        IndexUpThumbOut,
+        ThumbOut,
     }
 }
