@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
@@ -9,16 +10,37 @@ using UnityEngine;
 public class Gesture : ScriptableObject
 {
     public GestureID id;
-    public long duration;
+    [Min(1)] public int amountOfSampleFrames = 600;
     public Handedness handedness;
     public TextAsset file;
+    [SerializeField] private GameObject handPrefab;
+
+    public GameObject HandPrefab
+    {
+        get => handPrefab;
+        set
+        {
+            SetDirty();
+            handPrefab = value;
+        }
+    }
+    
+    private new void SetDirty()
+    {
+        #if UNITY_EDITOR
+        UnityEditor.EditorUtility.SetDirty(this);
+        #endif
+    }
+    [Serializable]
     public enum GestureID
     {
         None = 0,
-        Fist,
-        IndexMiddleUp,
-        IndexUp,
-        IndexUpThumbOut,
-        ThumbOut,
+        TranslateAndRotate,
+        Translate,
+        Rotate,
+        Scale,
+        Select,
+        Record,
+        
     }
 }

@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89b1545ddc61d344e8c7dfb8a1370289, type: 3}
+  m_Name: GestureRecorderEvent
+  m_EditorClassIdentifier: 
+  gestures:
+  - {fileID: 11400000, guid: 1c63e5589fd36db4fb911d303ec494f0, type: 2}
+  - {fileID: 11400000, guid: de4f154ac0e518d4fb9b5a4b65ddd994, type: 2}
+  - {fileID: 11400000, guid: 6bd45060ed7554b479e540f83870a81e, type: 2}

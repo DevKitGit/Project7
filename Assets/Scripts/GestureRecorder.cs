@@ -2,6 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Security.AccessControl;
 using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.UI;
 using Microsoft.MixedReality.Toolkit.Utilities;
@@ -20,21 +23,25 @@ public class GestureRecorder : MonoBehaviour
     /// giving an jointPositionOffset that creates a poking motion when interpolated.</para>
     /// </remarks>
 
-    public ProgramSO programSo;
+    [SerializeField] private GestureRecorderEvents _gestureRecorderEvents;
 
-    public int _currProgramIndex = 0;
+    private Gesture currentGesture;
+    
+    private bool DoneRecording => Time.frameCount - _frameCountOffset == currentGesture.amountOfSampleFrames - 1;
+
     public TrackedHandJoint ReferenceJoint { get; set; } = TrackedHandJoint.IndexTip;
     
     private Vector3 jointPositionOffset = Vector3.zero;
     private Handedness recordingHand = Handedness.None;
     private bool isRecording = false, leftRecording = false, rightRecording = false;
 
-    [SerializeField] private int RecordedFrames;
     private LoggingManager _loggingManager;
     private int _frameCountOffset;
     private Stopwatch _timeOffset;
     private MixedRealityPose[] jointPoses;
 
+    private string root =
+        $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\P7GestureData";
     public static readonly TrackedHandJoint[] _jointIDs =
     {
         TrackedHandJoint.Wrist,
@@ -65,57 +72,102 @@ public class GestureRecorder : MonoBehaviour
         TrackedHandJoint.PinkyTip
     };
 
-    private Quaternion jointRotationOffset;
-
+    public bool DebugMode;
 
     private void Start()
     {
-        
+
         _loggingManager = FindObjectOfType<LoggingManager>();
         _loggingManager.SetEmail("NA");
+        
         jointPoses = new MixedRealityPose[_jointIDs.Length];
+        if (_gestureRecorderEvents != null)
+        {
+            _gestureRecorderEvents.OnGestureSelected += GestureSelected;
+            _gestureRecorderEvents.OnStartRecordingUserGesture += StartRecordingUserGesture;
+            
+        }
     }
 
-    public void ToggleRecordNextGesture()
+    private void OnApplicationQuit()
     {
-        isRecording = !isRecording;
-        if (isRecording)
+        if (DebugMode)
         {
-            RecordHandStart(programSo.program[_currProgramIndex].handedness);
+            var directoryInfo = new DirectoryInfo($"{root}\\Debug");
+            if (!directoryInfo.Exists)
+            {
+                directoryInfo.Create();
+            }
+            _loggingManager.SetSavePath($"{root}\\Debug");
         }
         else
         {
-            StopRecording();
+            var currentLargestSubDirectoryNumber = new DirectoryInfo($"{root}").GetDirectories().Where(e => int.TryParse(e.Name,out _)).OrderByDescending(e => e.Name).ToArray();
+            DirectoryInfo dirinfo;
+            if (currentLargestSubDirectoryNumber.Length == 0)
+            {
+                 dirinfo = new DirectoryInfo($"{root}\\{0}");
+            }
+            else
+            {
+                dirinfo = new DirectoryInfo($"{root}\\{int.Parse(currentLargestSubDirectoryNumber[0].Name)+1}");
+            }
+            if (!dirinfo.Exists)
+            {
+                dirinfo.Create();
+            }
+            _loggingManager.SetSavePath(dirinfo.FullName);
+        }
+        _loggingManager.SaveAllLogs(true);
+    }
+
+    private void OnDestroy()
+    {
+        if (_gestureRecorderEvents != null)
+        {
+            _gestureRecorderEvents.OnGestureSelected -= GestureSelected;
+            _gestureRecorderEvents.OnStartRecordingUserGesture -= StartRecordingUserGesture;
         }
     }
 
+    private void GestureSelected(object o)
+    {
+        currentGesture = (Gesture)o;
+    }
+    
+    public void StartRecordingUserGesture()
+    {
+        HandJointUtils.TryGetJointPose(ReferenceJoint, currentGesture.handedness, out MixedRealityPose joint);
+        jointPositionOffset = joint.Position;
+        recordingHand = currentGesture.handedness;
+        _frameCountOffset = Time.frameCount;
+        _timeOffset = Stopwatch.StartNew();
+        
+        if (_loggingManager.HasLog($"gesture{currentGesture.id.ToString()}"))
+        {
+            _loggingManager.DeleteLog($"gesture{currentGesture.id.ToString()}");
+        }
+        _loggingManager.CreateLog($"gesture{currentGesture.id.ToString()}");
+        isRecording = true;
+    }
     public void StopRecording()
     {
         _timeOffset.Reset();
         isRecording = false;
-        recordingHand = Handedness.None;
-
-        _loggingManager.SaveLog($"gesture_{programSo.program[_currProgramIndex].id.ToString()}",clear:true);
-    }
-    private void RecordHandStart(Handedness handedness)
-    {
-        HandJointUtils.TryGetJointPose(ReferenceJoint, handedness, out MixedRealityPose joint);
-        jointPositionOffset = joint.Position;
-        jointRotationOffset = joint.Rotation;
-        recordingHand = handedness;
-        _frameCountOffset = Time.frameCount;
-        _timeOffset = Stopwatch.StartNew();
-        _loggingManager.CreateLog($"gesture{programSo.program[_currProgramIndex].id.ToString()}");
-        isRecording = true;
+        _gestureRecorderEvents.DoneRecordingUserGesture();
     }
 
     private void Update()
     {
-        if (isRecording)
+        if (!isRecording) return;
+        if (DoneRecording)
         {
-            RecordFrame();
+            StopRecording();
+            return;
         }
+        RecordFrame();
     }
+    
         
 
     public void RecordFrame()
@@ -126,7 +178,7 @@ public class GestureRecorder : MonoBehaviour
         {
             return;
         }
-        _loggingManager.Log($"gesture{programSo.program[_currProgramIndex].id.ToString()}", log);
+        _loggingManager.Log($"gesture{currentGesture.id.ToString()}", log);
     }
 
     
@@ -159,38 +211,16 @@ public class GestureRecorder : MonoBehaviour
         for (var i = 0; i < jointPoses.Length; ++i)
         {                                                      
             var itemString = _jointIDs[i].ToString();
+            
             output.Add($"{itemString}PosX",jointPoses[i].Position.x);
             output.Add($"{itemString}PosY",jointPoses[i].Position.y);
             output.Add($"{itemString}PosZ",jointPoses[i].Position.z);
+            
             output.Add($"{itemString}RotX",jointPoses[i].Rotation.x);
             output.Add($"{itemString}RotY",jointPoses[i].Rotation.y);
             output.Add($"{itemString}RotZ",jointPoses[i].Rotation.z);
             output.Add($"{itemString}RotW",jointPoses[i].Rotation.w);
 
-        }
-        return output;
-    }
-    
-    public Dictionary<string, object> GenerateExampleLog()
-    {
-        var output = new Dictionary<string, object>();
-        output.Add("Handedness", recordingHand.ToString());
-        output.Add("Timestamp", "NA");
-        output.Add("Framecount", "NA");
-        output.Add("SessionID", "NA");
-        output.Add("Email", "NA");
-        output.Add("ReferenceJoint", ReferenceJoint);
-
-        for (var i = 0; i < jointPoses.Length; ++i)
-        {                                                      
-            var itemString = _jointIDs[i].ToString();
-            output.Add($"{itemString}PosX",jointPoses[i].Position.x);
-            output.Add($"{itemString}PosY",jointPoses[i].Position.y);
-            output.Add($"{itemString}PosZ",jointPoses[i].Position.z);
-            output.Add($"{itemString}RotX",jointPoses[i].Rotation.x);
-            output.Add($"{itemString}RotY",jointPoses[i].Rotation.y);
-            output.Add($"{itemString}RotZ",jointPoses[i].Rotation.z);
-            output.Add($"{itemString}RotW",jointPoses[i].Rotation.w);
         }
         return output;
     }
