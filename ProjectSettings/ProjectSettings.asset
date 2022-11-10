@@ -727,7 +727,7 @@ PlayerSettings:
   webGLMemoryGeometricGrowthCap: 96
   scriptingDefineSymbols:
     Android: OCULUSINTEGRATION_PRESENT
-    Standalone: OCULUSINTEGRATION_PRESENT
+    Standalone: OCULUSINTEGRATION_PRESENT;DREAMTECK_SPLINES
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:
