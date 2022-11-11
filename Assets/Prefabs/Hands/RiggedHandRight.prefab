@@ -33,7 +33,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8178360485931203695}
-  - {fileID: 5744946098300833733}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -115,106 +114,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 227d61cd29424f649842ec919c4acf21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactorTransform: {fileID: 8178360485931203689}
+  currentEventReference:
+    useConstant: 0
+    foldout: 0
+    constantValue: 0
+    variable: {fileID: 0}
+  splineSpawnTransform:
+    useConstant: 0
+    foldout: 0
+    constantValue: {fileID: 0}
+    variable: {fileID: 0}
   distanceBetweenKnots: 0.15
   splinePrefab: {fileID: 3907539725412967891, guid: 0138fc5e19686004691db8a684b9a67e, type: 3}
-  keyToPress: 114
---- !u!1001 &5943744434535679572
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 2
-    m_TransformParent: {fileID: 3512491064599082542}
-    m_Modifications:
-    - target: {fileID: 2145483755446897041, guid: a3f5609c6be8dde4590ccde77f4501c3, type: 3}
-      propertyPath: m_RootOrder
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2145483755446897041, guid: a3f5609c6be8dde4590ccde77f4501c3, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.046463013
-      objectReference: {fileID: 0}
-    - target: {fileID: 2145483755446897041, guid: a3f5609c6be8dde4590ccde77f4501c3, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.0354
-      objectReference: {fileID: 0}
-    - target: {fileID: 2145483755446897041, guid: a3f5609c6be8dde4590ccde77f4501c3, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.0016331235
-      objectReference: {fileID: 0}
-    - target: {fileID: 2145483755446897041, guid: a3f5609c6be8dde4590ccde77f4501c3, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2145483755446897041, guid: a3f5609c6be8dde4590ccde77f4501c3, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2145483755446897041, guid: a3f5609c6be8dde4590ccde77f4501c3, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2145483755446897041, guid: a3f5609c6be8dde4590ccde77f4501c3, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2145483755446897041, guid: a3f5609c6be8dde4590ccde77f4501c3, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2145483755446897041, guid: a3f5609c6be8dde4590ccde77f4501c3, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2145483755446897041, guid: a3f5609c6be8dde4590ccde77f4501c3, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2145483756000022384, guid: a3f5609c6be8dde4590ccde77f4501c3, type: 3}
-      propertyPath: m_Name
-      value: PressableButtonHoloLens2ToggleRadio_32x32
-      objectReference: {fileID: 0}
-    - target: {fileID: 2145483756587458176, guid: a3f5609c6be8dde4590ccde77f4501c3, type: 3}
-      propertyPath: m_textAlignment
-      value: 65535
-      objectReference: {fileID: 0}
-    - target: {fileID: 2145483756587458176, guid: a3f5609c6be8dde4590ccde77f4501c3, type: 3}
-      propertyPath: m_TextStyleHashCode
-      value: -1183493901
-      objectReference: {fileID: 0}
-    - target: {fileID: 2145483756587458176, guid: a3f5609c6be8dde4590ccde77f4501c3, type: 3}
-      propertyPath: m_VerticalAlignment
-      value: 512
-      objectReference: {fileID: 0}
-    - target: {fileID: 2145483756587458176, guid: a3f5609c6be8dde4590ccde77f4501c3, type: 3}
-      propertyPath: m_HorizontalAlignment
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7109518070521699370, guid: a3f5609c6be8dde4590ccde77f4501c3, type: 3}
-      propertyPath: m_textAlignment
-      value: 65535
-      objectReference: {fileID: 0}
-    - target: {fileID: 7109518070521699370, guid: a3f5609c6be8dde4590ccde77f4501c3, type: 3}
-      propertyPath: m_TextStyleHashCode
-      value: -1183493901
-      objectReference: {fileID: 0}
-    - target: {fileID: 7109518070521699370, guid: a3f5609c6be8dde4590ccde77f4501c3, type: 3}
-      propertyPath: m_VerticalAlignment
-      value: 512
-      objectReference: {fileID: 0}
-    - target: {fileID: 7109518070521699370, guid: a3f5609c6be8dde4590ccde77f4501c3, type: 3}
-      propertyPath: m_HorizontalAlignment
-      value: 2
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_AddedGameObjects: []
-  m_SourcePrefab: {fileID: 100100000, guid: a3f5609c6be8dde4590ccde77f4501c3, type: 3}
---- !u!4 &5744946098300833733 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2145483755446897041, guid: a3f5609c6be8dde4590ccde77f4501c3, type: 3}
-  m_PrefabInstance: {fileID: 5943744434535679572}
-  m_PrefabAsset: {fileID: 0}
+  gestureThatEnabled: 0
 --- !u!1001 &8178360485931067117
 PrefabInstance:
   m_ObjectHideFlags: 0
