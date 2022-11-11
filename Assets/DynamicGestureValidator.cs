@@ -22,7 +22,9 @@ public class DynamicGestureValidator : MonoBehaviour
     private AnimationCurve confidenceWeighing;
     
     private Dictionary<int, List<Detection>> _detectionFrame;
-    [SerializeField,ReadOnly] private Detection _currentGesture = new Detection(Gesture.GestureID.None,0f);
+    [SerializeField] private bool gestureOverrideMode;
+    [SerializeField] private Detection _currentGesture = new Detection(Gesture.GestureID.None,0f);
+    [SerializeField] private Detection _lastGesture = new Detection(Gesture.GestureID.None,0f);
 
     [SerializeField,ReadOnly] private List<Detection> currentGestureScores = new ();
 
@@ -62,6 +64,25 @@ public class DynamicGestureValidator : MonoBehaviour
 
     private void DecideOnCurrentGesture()
     {
+        if (gestureOverrideMode)
+        {
+            if (_currentGesture.gestureID != _lastGesture.gestureID)
+            {
+                _GestureStopped.Invoke();
+                if (_currentGesture.gestureID == Gesture.GestureID.None)
+                {
+                    _gestureIdReference.Value = _currentGesture.gestureID;
+
+                }
+                else
+                {
+                    _gestureIdReference.Value = _currentGesture.gestureID;
+                }
+                _GestureStarted.Invoke();
+                _lastGesture = _currentGesture;
+            }
+            return;
+        }
         if (_currentGesture.gestureID != Gesture.GestureID.None)
         {
             _currentGesture = currentGestureScores.First(e => e.gestureID == _currentGesture.gestureID);

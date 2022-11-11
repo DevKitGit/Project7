@@ -1,40 +1,56 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Devkit.Modularis.References;
 using UnityEngine;
 
 public class SplineInteractor : MonoBehaviour
 {
+    [SerializeField] private GestureIdReference currentEventReference;
+    [SerializeField] private ObjectReference splineSpawnTransform;
+    private GameObject currentSplineSpawnAnchor;
     [SerializeField] private float distanceBetweenKnots;
     [SerializeField] private GameObject splinePrefab;
+    [SerializeField] private Gesture.GestureID gestureThatEnabled;
+    
     private Vector3 lastKnotPosition;
-    private bool extrudeSplineMode;
-
     private RuntimeKnotGenerator _runtimeKnotGenerator;
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
-        
+        splineSpawnTransform.RegisterCallback(OnSplineTransformChanged);
+        currentEventReference.RegisterCallback(OnGestureChanged);
     }
 
+    private void OnGestureChanged()
+    {
+        //Do stuff possibly?
+    }
+
+    private void OnDestroy()
+    {
+        splineSpawnTransform.UnregisterCallback(OnSplineTransformChanged);
+    }
+
+    private void OnSplineTransformChanged()
+    {
+        currentSplineSpawnAnchor = (GameObject)splineSpawnTransform.Value;
+    }
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.N))
+        if (currentEventReference == gestureThatEnabled)
         {
-            var splineGo = Instantiate(splinePrefab,transform.position,Quaternion.identity);
-            _runtimeKnotGenerator = splineGo.GetComponent<RuntimeKnotGenerator>();
-            extrudeSplineMode = true;
-            lastKnotPosition = transform.position;
-        }
+            lastKnotPosition = currentSplineSpawnAnchor.transform.position;
 
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            extrudeSplineMode = false;
+            var splineGo = Instantiate(splinePrefab,lastKnotPosition,Quaternion.identity);
+            _runtimeKnotGenerator = splineGo.GetComponent<RuntimeKnotGenerator>();
         }
-        if (extrudeSplineMode & Vector3.Distance(lastKnotPosition, transform.position) >= distanceBetweenKnots)
+        
+        if (currentEventReference == gestureThatEnabled & Vector3.Distance(lastKnotPosition, currentSplineSpawnAnchor.transform.position) > distanceBetweenKnots)
         {
-            lastKnotPosition = transform.position;
-            _runtimeKnotGenerator.AddPointToEnd(transform.position);
+            lastKnotPosition = currentSplineSpawnAnchor.transform.position;
+            _runtimeKnotGenerator.AddPointToEnd(lastKnotPosition);
         }
     }
 }
