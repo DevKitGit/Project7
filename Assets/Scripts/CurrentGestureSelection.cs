@@ -1,57 +1,72 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class CurrentGestureSelection : MonoBehaviour
 {
     [SerializeField] private GestureRecorderEvents gestureRecorderEvent;
-    [SerializeField] private MeshRenderer backgroundQuad;
-    [SerializeField] private MeshRenderer currentSelectionQuad;
+    [SerializeField] private Transform currentSelectionQuad;
+    [SerializeField] private float xScaleMax;
+    [SerializeField] private float xScaleMin;
+    [SerializeField] private float xPosMax;
+    [SerializeField] private float xPosMin;
 
-    [SerializeField, Range(0f,0.1f)] private float _borderPercentage;
-    private float _border;
-    [SerializeField, Range(0f,0.3f)] private float _spacingPercentage;
-    private float _spacing;
-    
-    private float _width;
-    private float _height;
-    private bool _initialized;
-    private int _maxValue, _currentValue;
-
+    private bool _Gestureinitialized;
+    private int sampleFrameForThisGesture = 100;
+    private int elapsedSampleFrames = 0;
     void OnEnable()
     {
         if (gestureRecorderEvent == null) return;
         gestureRecorderEvent.OnGestureSelected += UpdateCurrentGestureIndicator;
+        gestureRecorderEvent.OnStartRecordingUserGesture += OnStartRecordingUserGesture;
+    }
+
+    private void OnStartRecordingUserGesture()
+    {
+        _Gestureinitialized = true;
+        var progressBarTransform = currentSelectionQuad.transform;
+        var position = progressBarTransform.localPosition;
+        var scale = progressBarTransform.localScale;
+        
+        position = new Vector3(xPosMin, position.y, position.z);
+        scale = new Vector3(xScaleMin, scale.y, scale.z);
+
+        progressBarTransform.localPosition = position;
+        progressBarTransform.localScale = scale;
     }
     void OnDisable()
     {
         if (gestureRecorderEvent == null) return;
         gestureRecorderEvent.OnGestureSelected -= UpdateCurrentGestureIndicator;
+        gestureRecorderEvent.OnStartRecordingUserGesture -= OnStartRecordingUserGesture;
+
     }
     private void UpdateCurrentGestureIndicator(object obj)
     {
         if (obj is not Gesture gesture) return;
-        _maxValue = Math.Min(gestureRecorderEvent.gestures.Count,1);
-        _currentValue = gestureRecorderEvent.gestures.IndexOf(gesture);
-        if (_initialized) return;
-        _initialized = true;
-        //setup initial config
-        
+        print("GestureProgressUpdated");
+        sampleFrameForThisGesture = gesture.amountOfSampleFrames;
+        elapsedSampleFrames = 0;
     }
-    /*
-     private Vector2 GetCenterPointOfIndex(int i)
+    
+    private void Update()
     {
-        return new Vector2((1 + 2 i)/(2 M), _height / 2);
-    }
-    private float CalculateSingleWidth()
-    {
-        return _width - 2 * BorderPercentage - (_maxValue - 1) * SpacingPercentage;
-    }*/
+        if (_Gestureinitialized)
+        {
+            var newXPos = math.lerp(xPosMin, xPosMax, elapsedSampleFrames / (float)sampleFrameForThisGesture);
+            var newXScale = math.lerp(xScaleMin, xScaleMax, elapsedSampleFrames / (float)sampleFrameForThisGesture);
+            currentSelectionQuad.localPosition = new Vector3(newXPos, currentSelectionQuad.localPosition.y, currentSelectionQuad.localPosition.z);
+            currentSelectionQuad.localScale = new Vector3(newXScale, currentSelectionQuad.localScale.y, currentSelectionQuad.localScale.z);
 
-
-    private void ResizeSelectionHighlight()
-    {
-        
+            elapsedSampleFrames++;
+            
+            if (elapsedSampleFrames == sampleFrameForThisGesture)
+            {
+                _Gestureinitialized = false;
+            }
+        }
     }
+
 }

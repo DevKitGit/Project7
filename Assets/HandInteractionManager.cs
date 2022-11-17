@@ -55,4 +55,5 @@ public class HandInteractionManager : MonoBehaviour
     {
         _leftHandActive.Value = false;
     }
+    
 }

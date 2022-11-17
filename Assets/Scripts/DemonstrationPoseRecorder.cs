@@ -56,7 +56,7 @@ public class DemonstrationPoseRecorder : MonoBehaviour
         }
 
         folderpath +=
-            $"{gesture.id.ToString()}-gesture-{Directory.EnumerateFiles(folderpath).Count(e => e.EndsWith(".prefab")) + 1}.prefab";
+            $"{gesture.id.ToString()}-{gesture.handedness.ToString()}-{Directory.EnumerateFiles(folderpath).Count(e => e.EndsWith(".prefab")) + 1}.prefab";
 
         correctSmr.transform.parent.gameObject.SetActive(false);
         var GameObjectIWantToSave = Instantiate(correctSmr.transform.parent.gameObject);

@@ -143,11 +143,11 @@ public class GestureRecorder : MonoBehaviour
         _frameCountOffset = Time.frameCount;
         _timeOffset = Stopwatch.StartNew();
         
-        if (_loggingManager.HasLog($"gesture{currentGesture.id.ToString()}"))
+        if (_loggingManager.HasLog($"gesture-{currentGesture.id.ToString()}-{currentGesture.handedness.ToString()}"))
         {
-            _loggingManager.DeleteLog($"gesture{currentGesture.id.ToString()}");
+            _loggingManager.DeleteLog($"gesture-{currentGesture.id.ToString()}-{currentGesture.handedness.ToString()}");
         }
-        _loggingManager.CreateLog($"gesture{currentGesture.id.ToString()}");
+        _loggingManager.CreateLog($"gesture-{currentGesture.id.ToString()}-{currentGesture.handedness.ToString()}");
         isRecording = true;
     }
     public void StopRecording()
@@ -178,7 +178,7 @@ public class GestureRecorder : MonoBehaviour
         {
             return;
         }
-        _loggingManager.Log($"gesture{currentGesture.id.ToString()}", log);
+        _loggingManager.Log($"gesture-{currentGesture.id.ToString()}-{currentGesture.handedness.ToString()}", log);
     }
 
     
@@ -197,6 +197,8 @@ public class GestureRecorder : MonoBehaviour
         {
             jointPoses[i] = MixedRealityPose.ZeroIdentity;
             jointPoses[i] = pose.GetLocalJointPose(_jointIDs[i], recordingHand);
+            jointPoses[i].Position = Quaternion.Inverse(CameraCache.Main.transform.rotation) * jointPoses[i].Position;
+            jointPoses[i].Rotation = Quaternion.Inverse(CameraCache.Main.transform.rotation) * jointPoses[i].Rotation;
         }
     }
     

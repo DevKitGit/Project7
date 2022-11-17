@@ -5,6 +5,7 @@ using Microsoft.MixedReality.Toolkit.Dwell;
 using Microsoft.MixedReality.Toolkit.UI;
 using OculusSampleFramework;
 using UnityEngine;
+using Interactable = Microsoft.MixedReality.Toolkit.UI.Interactable;
 
 public class DeselectOnGestureEvent : MonoBehaviour
 {
@@ -18,25 +19,28 @@ public class DeselectOnGestureEvent : MonoBehaviour
     private void DeselectRecordButton()
     {
         if (_pressableButton == null || !_onDoneRecording) return;
+        GetComponent<Interactable>().CanDeselect = true;
+        
         _pressableButton.ButtonReleased.Invoke();
         print("aa");
     }
     private void DeselectReplayButton()
     {
         if (_pressableButton == null || !_onDoneReplaying) return;
+        GetComponent<Interactable>().CanDeselect = true;
         _pressableButton.ButtonReleased.Invoke();
         print("aaa");
 
     }
     
-    void Start()
+    void OnEnable()
     {
         _pressableButton = GetComponent<PressableButtonHoloLens2>();
         if (gestureRecorderEvents == null) return;
         gestureRecorderEvents.OnDoneReplayRecordedUserGesture += DeselectReplayButton;
         gestureRecorderEvents.OnDoneRecordingUserGesture += DeselectRecordButton;
     }
-    private void OnDestroy()
+    private void OnDisable()
     {
         if (gestureRecorderEvents == null) return;
         gestureRecorderEvents.OnDoneReplayRecordedUserGesture -= DeselectReplayButton;

@@ -34,13 +34,13 @@ public class Gesture : ScriptableObject
     [Serializable]
     public enum GestureID
     {
-        None = 0,
-        TranslateAndRotate,
+        None,
         Translate,
         Rotate,
         Scale,
+        Hover,
         Select,
-        Record,
-        
+        TeleportHover,
+        TeleportSelect
     }
 }

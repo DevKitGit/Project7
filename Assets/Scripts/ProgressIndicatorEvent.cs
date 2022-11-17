@@ -29,7 +29,7 @@ public class ProgressIndicatorEvent : MonoBehaviour
             indicator.Progress = progress;
             await Task.Yield();
         }
-
+        
         indicator.Message = $"Current pose: {currentGesture.id.ToString()}";
         await indicator.CloseAsync();
     }

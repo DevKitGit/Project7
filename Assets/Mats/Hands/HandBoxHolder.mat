@@ -95,13 +95,13 @@ Material:
     - _BorderLightOpaqueAlpha: 1
     - _BorderLightReplacesAlbedo: 1
     - _BorderLightUsesHoverColor: 0
-    - _BorderMinValue: 0.6
-    - _BorderWidth: 0.12
+    - _BorderMinValue: 1
+    - _BorderWidth: 1
     - _BorderWidthHorizontal: 0.1
     - _BorderWidthVertical: 0.1
     - _BumpScale: 1
     - _ClippingBorder: 0
-    - _ClippingBorderWidth: 0
+    - _ClippingBorderWidth: 0.354
     - _ClippingBox: 0
     - _ClippingPlane: 0
     - _ClippingPlaneBorder: 0
@@ -180,7 +180,7 @@ Material:
     - _VertexColors: 0
     - _VertexExtrusion: 0
     - _VertexExtrusionSmoothNormals: 0
-    - _VertexExtrusionValue: -0.02
+    - _VertexExtrusionValue: 0
     - _ZOffsetFactor: 0
     - _ZOffsetUnits: 0
     - _ZTest: 4
