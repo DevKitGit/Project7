@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aeee2ecba1224a129110dc3dd7ba48b4, type: 3}
-  m_Name: LeftHandGameObject
+  m_Name: LeftHandCenter
   m_EditorClassIdentifier: 
-  developerDescription: Left Hand Game Object when existing
+  developerDescription: 
   value: {fileID: 0}
   backupValue: {fileID: 0}
   resetOnGameExit: 1

@@ -9,10 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aeee2ecba1224a129110dc3dd7ba48b4, type: 3}
-  m_Name: RightHandGameObject
+  m_Script: {fileID: 11500000, guid: 2d38fb1463c5c804b8847c20e8873623, type: 3}
+  m_Name: XRInteractionEditorSettings
   m_EditorClassIdentifier: 
-  developerDescription: Right Hand Game Object when existing
-  value: {fileID: 0}
-  backupValue: {fileID: 0}
-  resetOnGameExit: 1
+  m_InteractionLayerUpdaterShown: 1
+  m_ShowOldInteractionLayerMaskInInspector: 0

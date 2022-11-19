@@ -288,7 +288,7 @@ namespace OculusSampleFramework
 		/// </summary>
 		/// <param name="rayOrigin">Primary ray origin.</param>
 		/// <param name="rayDirection">Primary ray direction.</param>
-		/// <returns>Interactable found, if any.</returns>
+		/// <returns>GenericInteractable found, if any.</returns>
 		private Interactable FindInteractableViaConeTest(Vector3 rayOrigin, Vector3 rayDirection)
 		{
 			Interactable targetInteractable = null;

@@ -13,6 +13,7 @@ public class ObjectEventReference : ScriptableObject
     private event Action<Object> OnDisabled;
 
     private event Action<Object> OnEnabled;
+    public bool isActive;
 
     public void RegisterListener(Action<Object> onCreateMethod = null,Action<Object> onDestroyedMethod = null )
     {
@@ -79,19 +80,29 @@ public class ObjectEventReference : ScriptableObject
     public void ObjectCreated(Object obj)
     {
         OnCreated?.Invoke(obj);
+        isActive = obj switch
+        {
+            GameObject gameObject => gameObject.activeSelf,
+            Component component => component.gameObject.activeSelf,
+            _ => true
+        };
     }
         
     public void ObjectDestroyed(Object obj)
     {
         OnDestroyed?.Invoke(obj);
+        isActive = false;
+
     }
     public void ObjectEnabled(Object obj)
     {
         OnEnabled?.Invoke(obj);
+        isActive = true;
     }
         
     public void ObjectDisabled(Object obj)
     {
         OnDisabled?.Invoke(obj);
+        isActive = false;
     }
 }

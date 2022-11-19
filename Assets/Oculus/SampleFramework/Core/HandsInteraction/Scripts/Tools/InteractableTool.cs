@@ -103,7 +103,7 @@ namespace OculusSampleFramework
 		/// Used to tell the tool to "focus" on a specific object, if
 		/// focusing is indeed possible given the tool type.
 		/// </summary>
-		/// <param name="focusedInteractable">Interactable to focus.</param>
+		/// <param name="focusedInteractable">GenericInteractable to focus.</param>
 		/// <param name="colliderZone">Collider zone of interactable.</param>
 		public abstract void FocusOnInteractable(Interactable focusedInteractable,
 			ColliderZone colliderZone);
