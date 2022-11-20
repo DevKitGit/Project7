@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Devkit.Modularis.Events;
 using Microsoft.MixedReality.Toolkit.Physics;
 using Unity.Mathematics;
 using UnityEngine;
@@ -11,7 +12,7 @@ using Object = UnityEngine.Object;
 public class SelectionInteractor : MonoBehaviour
 {
     [SerializeField] private ObjectEventReference _originPoint;
-    [SerializeField] private GestureIdReference _gestureStartedEvent;
+    [SerializeField] private GameEvent _gestureStartedEvent;
     [SerializeField] private GestureIdReference _gestureStoppedEvent;
     [SerializeField,UnityEngine.Min(1f)] private float MaxRadius = 1f;
     [SerializeField,UnityEngine.Min(1f)] private float MaxDistance = 1f;
@@ -31,6 +32,7 @@ public class SelectionInteractor : MonoBehaviour
         _lineRenderer = GetComponent<LineRenderer>();
         _lineRenderer.positionCount = 2;
         _lineRenderer.enabled = false;
+
         
     }
     private Vector3 _p0, _p1, _p2;
@@ -74,8 +76,9 @@ public class SelectionInteractor : MonoBehaviour
     
     private void OnValidate()
     {
+        if(!Application.isPlaying) { return; }
         _linePositions = new Vector3[lineResolution];
-        _lineRenderer.positionCount = lineResolution;
+        GetComponent<LineRenderer>().positionCount = lineResolution;
     }
 
     private GenericInteractable _newHoverTargetInteractable;

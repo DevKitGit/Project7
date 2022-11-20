@@ -61,8 +61,6 @@ public class RuntimeKnotGenerator : MonoBehaviour
         }
 
         _splineExtrude.Spline.SetTangentMode(TangentMode.AutoSmooth);
-
-        print(changed);
     }
 
     private bool DoesTransformMatchKnot(Vector3 p, Quaternion q, BezierKnot k)
