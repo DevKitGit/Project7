@@ -13,7 +13,7 @@ public class StartMenu : MonoBehaviour
 
     void Start()
     {
-        DebugUIBuilder.instance.AddLabel("Select Sample Scene");
+        DebugUIBuilder.instance.AddLabel("StartSelect Sample Scene");
         
         int n = UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings;
         for (int i = 0; i < n; ++i)

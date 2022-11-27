@@ -301,12 +301,12 @@ public class AnchorUIManager : MonoBehaviour
         {
             if (_selectedAnchor != null)
             {
-                // Deselect previous Anchor
+                // StopSelect previous Anchor
                 _selectedAnchor.OnSelect();
                 _selectedAnchor = null;
             }
 
-            // Select new Anchor
+            // StartSelect new Anchor
             _selectedAnchor = _hoveredAnchor;
             _selectedAnchor.OnSelect();
 
@@ -318,7 +318,7 @@ public class AnchorUIManager : MonoBehaviour
         {
             if (_selectedAnchor != null)
             {
-                // Deselect previous Anchor
+                // StopSelect previous Anchor
                 _selectedAnchor.OnSelect();
                 _selectedAnchor = null;
 

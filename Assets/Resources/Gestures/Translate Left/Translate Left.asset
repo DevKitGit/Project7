@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Translate Left
   m_EditorClassIdentifier: 
   id: 1
-  amountOfSampleFrames: 600
+  amountOfSampleFrames: 1000
   handedness: 1
   file: {fileID: 0}
   handPrefab: {fileID: 5411623337772796603, guid: 14ee9b49575bb8f46a0736f2975406cc, type: 3}

@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: New MixedRealityPointerProfile
   m_EditorClassIdentifier: 
   isCustomProfile: 1
-  pointingExtent: 10
+  pointingExtent: 0
   pointingRaycastLayerMasks:
   - serializedVersion: 2
     m_Bits: 4294967291
-  debugDrawPointingRays: 1
+  debugDrawPointingRays: 0
   debugDrawPointingRayColors:
   - {r: 1, g: 0.58280706, b: 0, a: 1}
   - {r: 0.86426115, g: 1, b: 0, a: 1}

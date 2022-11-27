@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Teleport Hover Right
   m_EditorClassIdentifier: 
   id: 6
-  amountOfSampleFrames: 600
+  amountOfSampleFrames: 1000
   handedness: 2
   file: {fileID: 0}
   handPrefab: {fileID: 8702383580185570312, guid: 2e5a7d1917eabb941992efc35637c907, type: 3}

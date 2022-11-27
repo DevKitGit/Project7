@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Devkit.Modularis.Events;
+using Devkit.Modularis.References;
 using Microsoft.MixedReality.Toolkit.Physics;
 using Unity.Mathematics;
 using UnityEngine;
@@ -11,121 +13,118 @@ using Object = UnityEngine.Object;
 [RequireComponent(typeof(LineRenderer))]
 public class SelectionInteractor : MonoBehaviour
 {
+    [SerializeField] private InteractableReference _currentlySelectedInteractable;
     [SerializeField] private ObjectEventReference _originPoint;
-    [SerializeField] private GameEvent _gestureStartedEvent;
-    [SerializeField] private GestureIdReference _gestureStoppedEvent;
-    [SerializeField,UnityEngine.Min(1f)] private float MaxRadius = 1f;
-    [SerializeField,UnityEngine.Min(1f)] private float MaxDistance = 1f;
-    [SerializeField,UnityEngine.Min(1f)] private float ConeAngle = 1f;
-    [SerializeField] private LayerMask selectableLayerMask;
-    [SerializeField,UnityEngine.Min(3)] private int lineResolution = 100;
+    [SerializeField] private GestureIdReference _currentGesture;
+    [SerializeField,UnityEngine.Min(1f)] private float _maxRadius = 1f;
+    [SerializeField,UnityEngine.Min(1f)] private float _maxDistance = 1f;
+    [SerializeField,UnityEngine.Min(1f)] private float _coneAngle = 1f;
+    [SerializeField] private LayerMask _selectableLayerMask;
+    [SerializeField,UnityEngine.Min(3)] private int _lineResolution = 100;
     [SerializeField,Range(0.01f,1f)] private float _bezierCurveDistance;
-    //Origin Point Transform
-    private Transform _OP;
+    [SerializeField] private int _directionSmoothingFrameCount;
+    [SerializeField] private float _gestureForgivenessDelay;
+    #region Variables
+    private Transform _op;
     private LineRenderer _lineRenderer;
-    private Gesture.GestureID currentGesture;
-    private GenericInteractable currHoverInter = null;
-    private GenericInteractable currentlySelectedInteractable = null;
-
-    private void Start()
-    {
-        _lineRenderer = GetComponent<LineRenderer>();
-        _lineRenderer.positionCount = 2;
-        _lineRenderer.enabled = false;
-
-        
-    }
+    private GenericInteractable _currHoverInter = null;
+    private GenericInteractable _newHoverTargetInteractable;
+    private RaycastHit _newHoverTargetRaycast;
     private Vector3 _p0, _p1, _p2;
     private float _t = 0f;
     private Vector3[] _linePositions;
+    private readonly List<Vector3> _directions = new List<Vector3>();
+    private Vector3 _smoothedDirection;
+    private RaycastHit[] _sphereCastHits;
+    private RaycastHit _currHit;
+    private int _sphereCastMaxHitCount = 10;
+    private bool _visualsEnabled;
+    private const int SphereCastLimit = 100;
+    private GenericInteractable _coneCastGenericInteractable;
+    private bool _trackingActive;
+    private bool _selectEnabled;
 
+    #endregion
+    private void Start()
+    {
+        _lineRenderer = GetComponent<LineRenderer>();
+        _linePositions = new Vector3[_lineResolution];
+        _lineRenderer.enabled = false;
+    }
     private void LateUpdate()
     {
-        if (_hoverEnabled)
+        
+        if (_visualsEnabled && _trackingActive)
         {
-            LookForNewHoverTarget();
-            GenerateBezierLineRenderer();
+            if (LookForNewTarget())
+            {
+                _lineRenderer.enabled = true;
+                GenerateBezierLineRenderer();
+                
+            }
+            else
+            {
+                _lineRenderer.enabled = false;
+            }
+        }
+        else
+        {
+            _lineRenderer.enabled = false;
         }
     }
-    
+    public bool LookForNewTarget()
+    {
+        
+        var target = ConeCastWithChecks(_op.position, _op.right, _maxRadius, _maxDistance, _coneAngle, _selectableLayerMask, .2f, 0.3f, 0.2f, 0.3f, out _newHoverTargetRaycast);
+        if (_currHoverInter != null)
+        {
+            _currHoverInter.StopHover();
+        }
+        if (!target)
+        {
+            print("FAIL: No hover target found");
+            
+            return false;
+        }
 
+        if (!_newHoverTargetRaycast.transform.gameObject.TryGetComponent(out _newHoverTargetInteractable))
+        {
+            print(
+                $"FAIL: GenericInteractable doesn't exist on found hover target named{_newHoverTargetRaycast.transform.gameObject.name}");
+            return false;
+        }
+
+        if (!_newHoverTargetInteractable.StartHover())
+        {
+            print($"Target was {(_newHoverTargetInteractable.Hovered() ? "Already being hovered" : "Not hoverable")}");
+            return false;
+        }
+        print("SUCCESS: GenericInteractable was found and can be hovered");
+
+        _currHoverInter = _newHoverTargetInteractable;
+        return true;
+    }
     public void GenerateBezierLineRenderer()
     {
-        //First Bezier point
-        _p0 = _OP.position;
-        _p2 = currHoverInter.transform.position;
-        //Middle Bezier point using Right Triangle math, i need to find the distance along the ray direction
-        //that a given target is placed away from the user, in order to normalize for it for easier configurability.
-        //a = c * sin(A)
-        //b = sqrt(c^2 - a^2)
-        var A = Vector3.Angle(_OP.forward, (_p2 - _p0).normalized);
-        var c = Vector3.Distance(_p0, _p2);
-        var a = c * math.sin(A);
-        var b = math.sqrt(math.pow(c, 2) - math.pow(a, 2));
-
-        _p1 = Vector3.MoveTowards(_p0,_p0 + _OP.forward * b,_bezierCurveDistance);       
-
-        for (int i = 0; i < lineResolution; i++)
+        if (_directions.Count > _directionSmoothingFrameCount)
+        {
+            _directions.RemoveAt(0);
+        }
+        _directions.Add(_op.right);
+        _smoothedDirection = _directions.Aggregate(new Vector3(0,0,0), (s,v) => s + v).normalized;
+        _p0 = _op.position;
+        _p2 = _currHoverInter.transform.position;
+        _p1 = FindNearestPointOnLine(_p0, _smoothedDirection, _p2);
+        _p1 = Vector3.MoveTowards(_p0,_p1, _bezierCurveDistance*Vector3.Distance(_p0,_p1));
+        for (int i = 0; i < _lineResolution; i++)
         {
             //B(t) = (1-t)^2*P0 + 2*(1-t)*t*P1 + t^2P2, 0 < t < 1
-            _t = (float) i / lineResolution;
-            _linePositions[i] = math.pow(1 - _t, 2) * _p0 + 2 * (1 - _t) * _t * _p1 + math.pow(_t, 2) * _p2;
+            _t = (float) i / _lineResolution;
+            _linePositions[i] = math.pow(1f - _t, 2f) * _p0 + 2f * (1f - _t) * _t * _p1 + math.pow(_t, 2f) * _p2;
         }
         _lineRenderer.SetPositions(_linePositions);
     }
-    
-    private void OnValidate()
-    {
-        if(!Application.isPlaying) { return; }
-        _linePositions = new Vector3[lineResolution];
-        GetComponent<LineRenderer>().positionCount = lineResolution;
-    }
-
-    private GenericInteractable _newHoverTargetInteractable;
-    private RaycastHit _newHoverTargetRaycast;
-    public void LookForNewHoverTarget()
-    {
-        var hoverTarget = ConeCastWithChecks(_OP.position, _OP.forward, MaxRadius, MaxDistance, ConeAngle, selectableLayerMask, .2f, 0.3f, 0.2f, 0.3f, out _newHoverTargetRaycast);
-        if (!hoverTarget) { return;}
-        if (_newHoverTargetRaycast.transform.TryGetComponent(out _newHoverTargetInteractable)) { return; }
-        if (!_newHoverTargetInteractable.HoverStart()) { return; }
-        currHoverInter = _newHoverTargetInteractable;
-    }
-
-    private void OnEnable()
-    {
-        _originPoint.RegisterListener(OnOriginCreate, OnOriginDestroy);
-        _gestureStartedEvent.RegisterCallback(OnGestureStarted);
-        _gestureStoppedEvent.RegisterCallback(OnGestureStopped);
-    }
-
-
-
-    private void OnDisable()
-    {
-        _originPoint.UnregisterListener(OnOriginCreate, OnOriginDestroy);
-        _gestureStartedEvent.UnregisterCallback(OnGestureStarted);
-        _gestureStoppedEvent.UnregisterCallback(OnGestureStopped);
-
-
-    }
-    private void OnGestureStarted()
-    {
-        _hoverEnabled = currentGesture == Gesture.GestureID.Hover;
-    }
-    private void OnGestureStopped()
-    {
-        _hoverEnabled = false;
-    }
-
-    private void OnOriginCreate(Object obj) => _OP = ((GameObject)obj).transform;
-    private void OnOriginDestroy(Object obj) => _OP = null;
-    private RaycastHit[] sphereCastHits;
-    private RaycastHit currHit;
-    private int sphereCastMaxHitCount = 10;
-    private bool _hoverEnabled;
-    private const int sphereCastLimit = 100;
-    private GenericInteractable _coneCastGenericInteractable;
+    #region Conecasting
     /// <summary>
     /// Casts a sphere along a ray and checks if the hitpoint is within the angle of the cone and returns the best target determined by the weights provided.
     /// </summary>
@@ -143,19 +142,19 @@ public class SelectionInteractor : MonoBehaviour
     /// <returns>The RaycastHit of the best object.</returns>
     public bool ConeCastWithChecks(Vector3 origin, Vector3 direction, float maxRadius, float maxDistance, float coneAngle, LayerMask layerMask, float distanceWeight, float angleWeight, float distanceToCenterWeight, float angleToCenterWeight,out RaycastHit raycastHit)
     {
-        if (sphereCastHits == null || sphereCastHits.Length < sphereCastMaxHitCount)
+        if (_sphereCastHits == null || _sphereCastHits.Length < _sphereCastMaxHitCount)
         {
-            sphereCastHits = new RaycastHit[sphereCastMaxHitCount];
+            _sphereCastHits = new RaycastHit[_sphereCastMaxHitCount];
         }
-
-        var hitCount = Physics.SphereCastNonAlloc(origin - (direction * maxRadius), maxRadius, direction, sphereCastHits, maxDistance, layerMask, QueryTriggerInteraction.Collide);
+        
+        var hitCount = Physics.SphereCastNonAlloc(origin - (direction * maxRadius), maxRadius, direction, _sphereCastHits, maxDistance, layerMask, QueryTriggerInteraction.Collide);
 
         // Algorithm: double the max hit count if there are too many results, up to a certain limit
-        if (hitCount >= sphereCastMaxHitCount && sphereCastMaxHitCount < sphereCastLimit)
+        if (hitCount >= _sphereCastMaxHitCount && _sphereCastMaxHitCount < SphereCastLimit)
         {
             // There might be more hits we didn't get, grow the array and try again next time
             // Note that this frame, the results might be imprecise.
-            sphereCastMaxHitCount = Math.Min(sphereCastLimit, sphereCastMaxHitCount * 2);
+            _sphereCastMaxHitCount = Math.Min(SphereCastLimit, _sphereCastMaxHitCount * 2);
         }
 
         raycastHit = new RaycastHit();
@@ -163,23 +162,32 @@ public class SelectionInteractor : MonoBehaviour
 
         for (int i = 0; i < hitCount; i++)
         {
-            currHit = sphereCastHits[i];
-            if (!currHit.transform.TryGetComponent(out _coneCastGenericInteractable)) { continue; }
-            if (!_coneCastGenericInteractable.Hoverable()) { continue; }
+            _currHit = _sphereCastHits[i];
+            if (!_currHit.transform.TryGetComponent(out _coneCastGenericInteractable))
+            {
+                print("SEARCH: GenericInteractable not found in raycast");
+                continue;
+            }
 
-            Vector3 hitPoint = currHit.point;
+            /*if (!_coneCastGenericInteractable.Hoverable())
+            {
+                print("SEARCH: GenericInteractable is not hoverable");
+                continue;
+            }*/
+
+            Vector3 hitPoint = _currHit.point;
             Vector3 directionToHit = hitPoint - origin;
             float angleToHit = Vector3.Angle(direction, directionToHit);
-            var position = currHit.collider.transform.position;
+            var position = _currHit.collider.transform.position;
             Vector3 hitDistance = position - hitPoint;
             Vector3 directionToCenter = position - origin;
             float angleToCenter = Vector3.Angle(direction, directionToCenter);
 
             // Additional work to see if there is a better point slightly further ahead on the direction line. This is only allowed if the collider isn't a mesh collider.
-            if (currHit.collider.GetType() != typeof(MeshCollider))
+            if (_currHit.collider.GetType() != typeof(MeshCollider))
             {
                 Vector3 pointFurtherAlongGazePath = (maxRadius * 0.5f * direction.normalized) + FindNearestPointOnLine(origin, direction, hitPoint);
-                Vector3 closestPointToPointFurtherAlongGazePath = currHit.collider.ClosestPoint(pointFurtherAlongGazePath);
+                Vector3 closestPointToPointFurtherAlongGazePath = _currHit.collider.ClosestPoint(pointFurtherAlongGazePath);
                 Vector3 directionToSecondaryPoint = closestPointToPointFurtherAlongGazePath - origin;
                 float angleToSecondaryPoint = Vector3.Angle(direction, directionToSecondaryPoint);
 
@@ -188,7 +196,7 @@ public class SelectionInteractor : MonoBehaviour
                     hitPoint = closestPointToPointFurtherAlongGazePath;
                     directionToHit = directionToSecondaryPoint;
                     angleToHit = angleToSecondaryPoint;
-                    hitDistance = currHit.collider.transform.position - hitPoint;
+                    hitDistance = _currHit.collider.transform.position - hitPoint;
                 }
             }
 
@@ -201,7 +209,7 @@ public class SelectionInteractor : MonoBehaviour
 
             if (!(newScore < score)) continue;
             score = newScore;
-            raycastHit = currHit;
+            raycastHit = _currHit;
         }
         return raycastHit.transform != null;
     }
@@ -212,4 +220,85 @@ public class SelectionInteractor : MonoBehaviour
         float dotP = Vector3.Dot(point - origin, direction);
         return origin + direction * dotP;
     }
+    #endregion
+
+    #region EventRegistration
+    private void OnEnable()
+    {
+        _originPoint.RegisterListener(OnOriginCreate, OnOriginDestroy);
+        _currentGesture.RegisterCallback(OnGestureChanged);
+    }
+    private void OnDisable()
+    {
+        _originPoint.UnregisterListener(OnOriginCreate, OnOriginDestroy);
+        _currentGesture.UnregisterCallback(OnGestureChanged);
+    }
+    #endregion
+    
+    #region EventCallbacks
+    private void OnGestureChanged()
+    {
+        if (_currentGesture == Gesture.GestureID.None)
+        {
+            if (_visualsEnabled)
+            {
+                Invoke(nameof(DelayHoverToggle), _gestureForgivenessDelay);
+            }
+        }
+        else
+        {
+            _visualsEnabled = _currentGesture == Gesture.GestureID.Hover || _currentGesture == Gesture.GestureID.Select;
+        }
+        if (_currentGesture == Gesture.GestureID.Select)
+        {
+            SelectCurrentlyHoveredInteractable();
+        }
+    }
+
+    private void DelayHoverToggle()
+    {
+        _visualsEnabled = _currentGesture == Gesture.GestureID.Hover || _currentGesture == Gesture.GestureID.Select;
+        if (_visualsEnabled)
+        {
+            _lineRenderer.enabled = true;
+        }
+        else
+        {
+            _lineRenderer.enabled = false;
+            if (_newHoverTargetInteractable != null)
+            {
+                _newHoverTargetInteractable.StopHover();
+            }
+        }
+    }
+
+    private void SelectCurrentlyHoveredInteractable()
+    {
+        //Exit clause: If no current hover target
+        if (_currHoverInter == null) { return; }
+        //Exit clause: If hover target is already the selected target;
+        if (_currentlySelectedInteractable.Value == _currHoverInter) { return; }
+        //Exit clause: if the currently selected isn't the same as the hovered, but the hovered isn't selectable
+        if (!_currHoverInter.StartSelect()) { return; }
+        
+        if (_currentlySelectedInteractable.Value != null)
+        {
+            _currentlySelectedInteractable.Value.StopSelect();
+        }
+        _currentlySelectedInteractable.Value = _currHoverInter;
+    }
+    
+    
+
+    private void OnOriginCreate(Object obj)
+    {
+        _op = ((GameObject)obj).transform;
+        _trackingActive = true;
+    }
+    private void OnOriginDestroy(Object obj)
+    {
+        _op = null;
+        _trackingActive = false;
+    }
+    #endregion
 }

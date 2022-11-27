@@ -89,7 +89,7 @@ public class TeleportInputHandlerTouch : TeleportInputHandlerHMD
 	/// <summary>
 	/// Which controller is being used for aiming.
 	/// </summary>
-	[Tooltip("Select the controller to be used for aiming. Supports LTouch, RTouch, or Touch for either.")]
+	[Tooltip("StartSelect the controller to be used for aiming. Supports LTouch, RTouch, or Touch for either.")]
 	public OVRInput.Controller AimingController;
 
     private OVRInput.Controller InitiatingController;
@@ -97,7 +97,7 @@ public class TeleportInputHandlerTouch : TeleportInputHandlerHMD
 	/// <summary>
 	/// The button to use for triggering aim and teleport when InputMode==CapacitiveButtonForAimAndTeleport
 	/// </summary>
-	[Tooltip("Select the button to use for triggering aim and teleport when InputMode==CapacitiveButtonForAimAndTeleport")]
+	[Tooltip("StartSelect the button to use for triggering aim and teleport when InputMode==CapacitiveButtonForAimAndTeleport")]
 	public AimCapTouchButtons CapacitiveAimAndTeleportButton;
 
 	/// <summary>

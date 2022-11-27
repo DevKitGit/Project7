@@ -30,7 +30,7 @@ determines whether an object is in range or out of range.
 
 Hands (via the DistanceGrabber component) determine the target object in one of two
 ways, depending on bool m_useSpherecast:
-true: cast a sphere of radius m_spherecastRadius at distance m_maxGrabDistance. Select
+true: cast a sphere of radius m_spherecastRadius at distance m_maxGrabDistance. StartSelect
 the first collision.
 false: from all objects within the grab volume, select the closest object that can be 
 hit by a ray from the player's hand.

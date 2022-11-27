@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Rotate Left
   m_EditorClassIdentifier: 
   id: 2
-  amountOfSampleFrames: 600
+  amountOfSampleFrames: 1000
   handedness: 1
   file: {fileID: 0}
   handPrefab: {fileID: 8702383580185570312, guid: b6e9d51d7e464894aa891f65b11b356f, type: 3}

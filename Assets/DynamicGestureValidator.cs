@@ -31,6 +31,7 @@ public class DynamicGestureValidator : MonoBehaviour
     [SerializeField] private GestureIdReference _gestureIdReference;
     [SerializeField] private GameEvent _GestureStarted;
     [SerializeField] private GameEvent _GestureStopped;
+    
     [Serializable]
     public struct Detection
     {
@@ -44,12 +45,12 @@ public class DynamicGestureValidator : MonoBehaviour
     }
     
     private static readonly List<string> GestureIDList = Enum.GetNames(typeof(Gesture.GestureID)).ToList();
-    
+
 
     private void Start()
     {
         _detectionFrame = new Dictionary<int,List<Detection>>();
-        for (int i = 1; i < GestureIDList.Count; i++)
+        for (int i = 0; i < GestureIDList.Count; i++)
         {
             _detectionFrame[i] = new List<Detection>();
         }
@@ -57,7 +58,7 @@ public class DynamicGestureValidator : MonoBehaviour
     
     private void Update()
     {
-        PushNewDetectionToQueue();
+        //PushNewDetectionToQueue();
         CalculateGestureConfidence();
         DecideOnCurrentGesture();
     }
@@ -107,16 +108,27 @@ public class DynamicGestureValidator : MonoBehaviour
             }
         }
 
-        if (highestConfidence.confidence < gestureInitializationReq)
+        if (highestConfidence.confidence <= gestureInitializationReq)
         {
             _currentGesture.confidence = 0f;
             return;
         }
+        _currentGesture = highestConfidence;
         _gestureIdReference.Value = _currentGesture.gestureID;
         _GestureStarted.Invoke();
-        _currentGesture = highestConfidence; 
     }
+    public void PushRemoteDetectionToQueue(float[] detections)
+    {
+        for (int i = 0; i < GestureIDList.Count; i++)
+        {
+            if (_detectionFrame[i].Count == framesToConsider)
+            {
+                _detectionFrame[i].RemoveAt(framesToConsider-1);
+            }
+            _detectionFrame[i].Insert(0,new Detection((Gesture.GestureID) i, detections[i]));
 
+        }
+    }
     private void PushNewDetectionToQueue()
     {
         for (int i = 1; i < GestureIDList.Count; i++)
@@ -126,6 +138,7 @@ public class DynamicGestureValidator : MonoBehaviour
                 _detectionFrame[i].RemoveAt(framesToConsider-1);
             }
             _detectionFrame[i].Insert(0,new Detection((Gesture.GestureID) i, CycleConfidenceValues(i-1)));
+
         }
     }
 
@@ -138,7 +151,7 @@ public class DynamicGestureValidator : MonoBehaviour
     private void CalculateGestureConfidence()
     {
         currentGestureScores.Clear();
-        for (int i = 1; i < GestureIDList.Count; i++)
+        for (int i = 0; i < GestureIDList.Count; i++)
         {
             var confidence = 0f;
             for (int j = 0; j < _detectionFrame[i].Count; j++)
