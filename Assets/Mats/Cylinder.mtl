@@ -1,0 +1,5 @@
+newmtl Font_Material
+map_Kd PerfectDOSVGA437.ttf
+Kd 1 1 1
+d 1
+
