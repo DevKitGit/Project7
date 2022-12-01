@@ -113,7 +113,7 @@ public class GestureIO : MonoBehaviour
         }
     }*/
     
-    private SortedDictionary<string, float> features = new()
+    private Dictionary<string, float> features = new()
     {
         {GestureRecorder.D_IndexTip_MiddleTip,0},
         {GestureRecorder.D_MiddleTip_RingTip,0},
@@ -129,7 +129,7 @@ public class GestureIO : MonoBehaviour
         {GestureRecorder.Palm_Rot_Y,0},
         {GestureRecorder.Palm_Rot_Z,0}*/
     };
-    private SortedDictionary<TrackedHandJoint, MixedRealityPose> jointPoses = new();
+    private Dictionary<TrackedHandJoint, MixedRealityPose> jointPoses = new();
 
     private void OnDrawGizmosSelected()
     {
@@ -154,9 +154,25 @@ public class GestureIO : MonoBehaviour
 
     private void Update()
     {
-        if (!handActive) return;
+        if (!handActive)
+        {
+            for (var i = 0; i < outputValues.Length; i++)
+            {
+                outputValues[i] = 0f;
+            }
+            dynamicGestureValidator.PushRemoteDetectionToQueue(outputValues);
+            return;
+        }
         validThisFrame = true;
-        GestureRecorder.TryCalculateJointPoses2(_hand, ref jointPoses);
+        if (!GestureRecorder.TryCalculateJointPoses2(_hand, ref jointPoses))
+        {
+            for (var i = 0; i < outputValues.Length; i++)
+            {
+                outputValues[i] = 0f;
+            }
+            dynamicGestureValidator.PushRemoteDetectionToQueue(outputValues);
+            return;
+        }
         GestureRecorder.CalculateJointFeatures(jointPoses, ref features);
         if (validThisFrame)
         {
@@ -171,8 +187,8 @@ public class GestureIO : MonoBehaviour
             sum_z_exp = z_exp.Sum();
             softmax = z_exp.Select(i => float.IsNaN(i / sum_z_exp) ? 0f : i / sum_z_exp).ToArray();
             outputValues[0] = softmax[7]; //None
-            outputValues[1] = softmax[6]; //translate
-            outputValues[2] = softmax[1]; //rotate
+            outputValues[1] = softmax[6]; //Translate
+            outputValues[2] = softmax[1]; //Rotate
             outputValues[3] = softmax[2]; //Scale
             outputValues[4] = softmax[0]; //Hover
             outputValues[5] = softmax[3]; //Select
@@ -187,13 +203,12 @@ public class GestureIO : MonoBehaviour
 
     private void PostProcess(ref float[] res)
     {
-        //first figure out if the hand is facing up or downwards in relation to the world, decides of hover or teleporthover
+        //first figure out if the hand is facing up or downwards in relation to the world, decides of hover or teleport hover
         bool palmFacingDown = Math.Abs(math.sign(math.dot(Vector3.down, -jointPoses[TrackedHandJoint.Palm].Up)) - 1f) < 0.001f;
         if (palmFacingDown)
         {
             res[4] += res[6];
             res[5] += res[7];
-
             res[6] = 0f;
             res[7] = 0f;
         }
@@ -201,11 +216,14 @@ public class GestureIO : MonoBehaviour
         {
             res[6] += res[4];
             res[7] += res[5];
-
             res[4] = 0f;
             res[5] = 0f;
         }
-        
+        float indexFacingUpAmount = math.clamp(math.dot(Vector3.up, (jointPoses[TrackedHandJoint.IndexTip].Position - jointPoses[TrackedHandJoint.IndexKnuckle].Position).normalized) + 0.2f,0f,1f);
+        var difference = res[2] - res[2] * indexFacingUpAmount;
+        res[0] += difference;
+        res[2] -= difference;
+        res[3] -= difference;
     }
     private void OnDestroy()
     {

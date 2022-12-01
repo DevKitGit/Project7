@@ -52,7 +52,7 @@ public class GestureRecorder : MonoBehaviour
         TrackedHandJoint.PinkyTip
     };
 
-    private SortedDictionary<TrackedHandJoint, MixedRealityPose> jointPoseLookup = new();
+    private Dictionary<TrackedHandJoint, MixedRealityPose> jointPoseLookup = new();
 
     public bool DebugMode;
 
@@ -217,10 +217,12 @@ public class GestureRecorder : MonoBehaviour
         }
         return true;
     }
-    
-    public static bool TryCalculateJointPoses2(Handedness handedness, ref SortedDictionary<TrackedHandJoint, MixedRealityPose> jointPoses)
+
+    private static List<TrackedHandJoint> keys = new List<TrackedHandJoint>();
+    public static bool TryCalculateJointPoses2(Handedness handedness, ref Dictionary<TrackedHandJoint, MixedRealityPose> jointPoses)
     {
-        var keys = jointPoses.Keys.ToArray();
+        keys.Clear();
+        keys.AddRange(jointPoses.Keys);
         foreach (var key in keys)
         {
             jointPoses[key] = MixedRealityPose.ZeroIdentity;
@@ -268,7 +270,7 @@ public class GestureRecorder : MonoBehaviour
     public const string Palm_Rot_Y = "Palm_Rot_Y";
     public const string Palm_Rot_Z = "Palm_Rot_Z";
     public const string Palm_Rot_W = "Palm_Rot_W";
-    private SortedDictionary<string, float> features = new()
+    private Dictionary<string, float> features = new()
     {
         {D_IndexTip_MiddleTip,0},
         {D_MiddleTip_RingTip,0},
@@ -279,13 +281,13 @@ public class GestureRecorder : MonoBehaviour
         {D_Palm_ThumbTip,0},
         {D_RingTip_PinkyTip,0},
         {D_Thumbtip_Indextip,0},
-        {Palm_Rot_W,0},
+        /*{Palm_Rot_W,0},
         {Palm_Rot_X,0},
         {Palm_Rot_Y,0},
-        {Palm_Rot_Z,0}
+        {Palm_Rot_Z,0}*/
     };
     
-    public static void CalculateJointFeatures(SortedDictionary<TrackedHandJoint, MixedRealityPose> jointPoses, ref SortedDictionary<string, float> features)
+    public static void CalculateJointFeatures(Dictionary<TrackedHandJoint, MixedRealityPose> jointPoses, ref Dictionary<string, float> features)
     {
         //D_Palm_ThumbTip
         features[D_Palm_ThumbTip] = Vector3.Distance(jointPoses[TrackedHandJoint.Palm].Position, jointPoses[TrackedHandJoint.ThumbTip].Position);
@@ -338,7 +340,7 @@ public class GestureRecorder : MonoBehaviour
             Gizmos.DrawLine(jointPoseLookup[TrackedHandJoint.Palm].Position, jointPoseLookup[TrackedHandJoint.Palm].Position + -(jointPoseLookup[TrackedHandJoint.Palm].Up)*0.2f);
         }*/
     }
-    public Dictionary<string, object> GenerateLog2(SortedDictionary<string,float> feats)
+    public Dictionary<string, object> GenerateLog2(Dictionary<string,float> feats)
     {
         var output = new Dictionary<string, object>();
         output.Add("Handedness", recordingHand.ToString());

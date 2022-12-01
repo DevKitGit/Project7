@@ -43,19 +43,17 @@ public class DynamicGestureValidator : MonoBehaviour
             this.confidence = confidence;
         }
     }
-    
     private static readonly List<string> GestureIDList = Enum.GetNames(typeof(Gesture.GestureID)).ToList();
 
-
-    private void Start()
+    public void OrderedStart()
     {
-        _detectionFrame = new Dictionary<int,List<Detection>>();
+        _detectionFrame = new Dictionary<int, List<Detection>>();
         for (int i = 0; i < GestureIDList.Count; i++)
         {
             _detectionFrame[i] = new List<Detection>();
         }
     }
-    
+
     private void Update()
     {
         //PushNewDetectionToQueue();
@@ -84,19 +82,14 @@ public class DynamicGestureValidator : MonoBehaviour
             }
             return;
         }
-        if (_currentGesture.gestureID != Gesture.GestureID.None)
+        _currentGesture = currentGestureScores.First(e => e.gestureID == _currentGesture.gestureID);
+        //if this runs, it means we're actively trying to maintain a gesture, only discard below a threshold
+        if (_currentGesture.confidence >= gestureMaintenanceReq)
         {
-            _currentGesture = currentGestureScores.First(e => e.gestureID == _currentGesture.gestureID);
-            
-            //if this runs, it means we're actively trying to maintain a gesture, only discard below a threshold
-            if (_currentGesture.confidence >= gestureMaintenanceReq)
-            {
-                return;
-            }
-            _gestureIdReference.Value = _currentGesture.gestureID;
-            _GestureStopped.Invoke();
+            return;
         }
-        
+        _gestureIdReference.Value = _currentGesture.gestureID;
+        _GestureStopped.Invoke();
         _currentGesture = new Detection(Gesture.GestureID.None, 0f);
         var highestConfidence = new Detection(Gesture.GestureID.None, 0f);
         //if this runs, no gesture is being made, so we look for the one with the highest score
@@ -107,7 +100,6 @@ public class DynamicGestureValidator : MonoBehaviour
                 highestConfidence = currentGestureScores[i];
             }
         }
-
         if (highestConfidence.confidence <= gestureInitializationReq)
         {
             _currentGesture.confidence = 0f;
@@ -154,12 +146,17 @@ public class DynamicGestureValidator : MonoBehaviour
         for (int i = 0; i < GestureIDList.Count; i++)
         {
             var confidence = 0f;
+            var temporalModifier = 0f;
             for (int j = 0; j < _detectionFrame[i].Count; j++)
             {
                 var temporalWeight = confidenceWeighing.Evaluate((float)j / framesToConsider);
+                temporalModifier += temporalWeight;
                 confidence += _detectionFrame[i][j].confidence * temporalWeight;
             }
+            temporalModifier = 1 / (temporalModifier / _detectionFrame[i].Count);
             confidence /= _detectionFrame[i].Count;
+            confidence *= temporalModifier;
+            
             currentGestureScores.Add(new Detection((Gesture.GestureID)i, confidence));
         }
         

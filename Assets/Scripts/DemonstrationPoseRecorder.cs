@@ -7,6 +7,9 @@ using System.IO;
 using System.Linq;
 using Microsoft.MixedReality.Toolkit.Input;
 using Unity.VisualScripting;
+
+#if UNITY_EDITOR
+
 using UnityEditor;
 using UnityEditor.SceneManagement;
 
@@ -80,3 +83,4 @@ public class DemonstrationPoseRecorder : MonoBehaviour
         return center / (children.Length);
     }
 }
+#endif
