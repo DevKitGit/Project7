@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 746047179559313126}
   - component: {fileID: 1652923512961531}
   - component: {fileID: 7473967679118298046}
+  - component: {fileID: 9075915465202482382}
+  - component: {fileID: 766207645828708389}
   m_Layer: 0
   m_Name: Knot
   m_TagString: Untagged
@@ -97,3 +99,59 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &9075915465202482382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1825974325364009401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db79693a87e736c49bd012d90c4f6bbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  storeInTexcoordChannel: 1
+  cospatialVertexDistance: 0.01
+--- !u!114 &766207645828708389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1825974325364009401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88d4b15fbfaa42d797aa7d4273456ef0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _transform: {fileID: 7308453002420064689}
+  _meshRenderer: {fileID: 1652923512961531}
+  _selected: 0
+  _selectable: 1
+  _destroyable: 1
+  _hovered: 0
+  _hoverable: 1
+  _beingTranslated: 0
+  _translateable: 1
+  translationConfiguration:
+    axisConstraint:
+      x: 0
+      y: 0
+      z: 0
+    widgetSize: 0
+    allowFarInteraction: 0
+  _beingRotated: 0
+  _rotatable: 1
+  rotationConfiguration:
+    axisConstraint:
+      x: 0
+      y: 0
+      z: 0
+    widgetSize: 0
+    allowFarInteraction: 0
+  _beingScaled: 0
+  _scalable: 0
+  scaleConfiguration:
+    minScale: {x: 0, y: 0, z: 0}
+    maxScale: {x: 0, y: 0, z: 0}

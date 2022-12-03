@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1026972958449094962
+--- !u!1 &4214143572828858625
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,46 +8,48 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7218681150966830753}
-  - component: {fileID: 1602100920103128729}
-  - component: {fileID: 7704323705505697058}
+  - component: {fileID: 3544462563620549563}
+  - component: {fileID: 7329926725032394850}
+  - component: {fileID: 5041331685273031523}
+  - component: {fileID: 4854454030309281374}
+  - component: {fileID: 5633998638825700532}
   m_Layer: 0
-  m_Name: Icosphere
+  m_Name: stylizedPlanet3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7218681150966830753
+--- !u!4 &3544462563620549563
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1026972958449094962}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_GameObject: {fileID: 4214143572828858625}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3544462563620549563}
-  m_RootOrder: -1
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &1602100920103128729
+--- !u!33 &7329926725032394850
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1026972958449094962}
+  m_GameObject: {fileID: 4214143572828858625}
   m_Mesh: {fileID: 289301614986012343, guid: e3ec7745af3072e4a955ca47a83fc84c, type: 3}
---- !u!23 &7704323705505697058
+--- !u!23 &5041331685273031523
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1026972958449094962}
+  m_GameObject: {fileID: 4214143572828858625}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -84,35 +86,59 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &4214143572828858625
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3544462563620549563}
-  m_Layer: 0
-  m_Name: stylizedPlanet3
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3544462563620549563
-Transform:
+--- !u!114 &4854454030309281374
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4214143572828858625}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -17.120575, y: 0, z: 11.56592}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 7218681150966830753}
-  m_Father: {fileID: 0}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db79693a87e736c49bd012d90c4f6bbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  storeInTexcoordChannel: 1
+  cospatialVertexDistance: 0.01
+--- !u!114 &5633998638825700532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4214143572828858625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88d4b15fbfaa42d797aa7d4273456ef0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _transform: {fileID: 0}
+  _meshRenderer: {fileID: 0}
+  _selected: 0
+  _selectable: 0
+  _destroyable: 0
+  _hovered: 0
+  _hoverable: 0
+  _beingTranslated: 0
+  _translateable: 1
+  translationConfiguration:
+    axisConstraint:
+      x: 0
+      y: 0
+      z: 0
+    widgetSize: 0
+    allowFarInteraction: 0
+  _beingRotated: 0
+  _rotatable: 0
+  rotationConfiguration:
+    axisConstraint:
+      x: 0
+      y: 0
+      z: 0
+    widgetSize: 0
+    allowFarInteraction: 0
+  _beingScaled: 0
+  _scalable: 1
+  scaleConfiguration:
+    minScale: {x: 0, y: 0, z: 0}
+    maxScale: {x: 0, y: 0, z: 0}

@@ -1,0 +1,6 @@
+newmtl StoneMarblePortoro_3
+bump StoneMarblePortoroGold001_NRM16_4K.tif
+map_Kd StoneMarblePortoroGold001_COL_4K.jpg
+Kd 1 1 1
+d 1
+

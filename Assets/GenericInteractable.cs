@@ -12,6 +12,9 @@ public class GenericInteractable : MonoBehaviour
     [Header("Selection")]
     [SerializeField,ReadOnly] private bool _selected;
     [SerializeField] private bool _selectable;
+    [SerializeField] private bool _destroyable;
+
+    public bool Destroyable() => _destroyable;
     public bool Selectable() => _selectable && !_selected;
     public bool Selected() => _selected;
 
@@ -185,6 +188,26 @@ public class GenericInteractable : MonoBehaviour
         return true;
     }
     #endregion
+
+    public void PlayAnimation()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void PauseAnimation()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void StopAnimation()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void ResumeAnimation()
+    {
+        throw new NotImplementedException();
+    }
 }
 
 [Serializable]
