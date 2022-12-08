@@ -138,7 +138,7 @@ namespace OculusSampleFramework
 		}
 
 		/// <summary>
-		/// Avoid hand collider during raycasts so move origin some distance away from where tool is.
+		/// Avoid leftInteractor collider during raycasts so move origin some distance away from where tool is.
 		/// </summary>
 		/// <returns>Proper raycast origin.</returns>
 		private Vector3 GetRayCastOrigin()

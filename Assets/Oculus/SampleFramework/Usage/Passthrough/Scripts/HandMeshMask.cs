@@ -1,16 +1,16 @@
 using UnityEngine;
 
 /*
- * This script creates a custom mesh, specifically for hand masking in the Passthrough SDK:
+ * This script creates a custom mesh, specifically for leftInteractor masking in the Passthrough SDK:
  * 
  * 1. Created with 2D screen space in mind, since it's 2D triangles facing the camera.
  *    Not advised to use this mesh in any other way.
  * 2. The look of it should be coupled with maskMaterial, which defines the falloff of the fade and
  *    also how it blends Passthrough.
- * 3. The mesh has UV.x of 0 where the hand is fully opaque, and UV.x of 1 where faded out.
+ * 3. The mesh has UV.x of 0 where the leftInteractor is fully opaque, and UV.x of 1 where faded out.
  *    This way, the gradient curve can be tuned in a user-friendly way (instead of in shader).
  *    There may be an optimization of avoiding a texture read, if the fade is all in shader (remapping UV.x)
- * 4. Requires knowledge of the hand bones and indices
+ * 4. Requires knowledge of the leftInteractor bones and indices
  */
 
 public class HandMeshMask : MonoBehaviour
@@ -65,7 +65,7 @@ public class HandMeshMask : MonoBehaviour
 
         if (referenceHand)
         {
-            // make sure all math accounts for hand scale
+            // make sure all math accounts for leftInteractor scale
             handScale = referenceHand.GetComponent<OVRHand>().HandScale;
             CreateHandMesh();
         }
@@ -241,7 +241,7 @@ public class HandMeshMask : MonoBehaviour
         // unfortunately there's no elegant way to do this
         // this is literally making a low-poly mesh in code (YUCK)
 
-        // palm side (on left hand)
+        // palm side (on left leftInteractor)
         handTriangles[triCounter++] = baseVertId;
         handTriangles[triCounter++] = baseVertId + 1;
         handTriangles[triCounter++] = baseVertId + 4;

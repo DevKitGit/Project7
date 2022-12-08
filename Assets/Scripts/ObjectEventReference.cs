@@ -11,7 +11,6 @@ public class ObjectEventReference : ScriptableObject
     private event Action<Object> OnDestroyed;
 
     private event Action<Object> OnDisabled;
-
     private event Action<Object> OnEnabled;
     public bool isActive;
 

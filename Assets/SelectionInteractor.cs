@@ -82,23 +82,23 @@ public class SelectionInteractor : MonoBehaviour
         }
         if (!target)
         {
-            //print("FAIL: No hover target found");
+            print("FAIL: No hover target found");
             
             return false;
         }
 
         if (!_newHoverTargetRaycast.transform.gameObject.TryGetComponent(out _newHoverTargetInteractable))
         {
-            //print($"FAIL: GenericInteractable doesn't exist on found hover target named{_newHoverTargetRaycast.transform.gameObject.name}");
+            print($"FAIL: GenericInteractable doesn't exist on found hover target named{_newHoverTargetRaycast.transform.gameObject.name}");
             return false;
         }
 
         if (!_newHoverTargetInteractable.StartHover())
         {
-            //print($"Target was {(_newHoverTargetInteractable.Hovered() ? "Already being hovered" : "Not hoverable")}");
+            print($"Target was {(_newHoverTargetInteractable.Hovered() ? "Already being hovered" : "Not hoverable")}");
             return false;
         }
-        //print("SUCCESS: GenericInteractable was found and can be hovered");
+        print("SUCCESS: GenericInteractable was found and can be hovered");
 
         _currHoverInter = _newHoverTargetInteractable;
         return true;
@@ -155,7 +155,6 @@ public class SelectionInteractor : MonoBehaviour
             // Note that this frame, the results might be imprecise.
             _sphereCastMaxHitCount = Math.Min(SphereCastLimit, _sphereCastMaxHitCount * 2);
         }
-
         raycastHit = new RaycastHit();
         float score = float.MaxValue;
 
@@ -164,10 +163,9 @@ public class SelectionInteractor : MonoBehaviour
             _currHit = _sphereCastHits[i];
             if (!_currHit.transform.TryGetComponent(out _coneCastGenericInteractable))
             {
-                //print("SEARCH: GenericInteractable not found in raycast");
+                print("SEARCH: GenericInteractable not found in raycast");
                 continue;
             }
-
             /*if (!_coneCastGenericInteractable.Hoverable())
             {
                 print("SEARCH: GenericInteractable is not hoverable");

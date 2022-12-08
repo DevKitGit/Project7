@@ -2,10 +2,14 @@
 using UnityEngine;
 public class ConfigureHands : MonoBehaviour
 {
+    [SerializeField] private PointerBehavior handRayPointerBehavior;
+    [SerializeField] private PointerBehavior gazePointerBehavior;
+    [SerializeField] private PointerBehavior handGrabPointerBehavior;
+
     private void Start()
     {
-        PointerUtils.SetHandRayPointerBehavior(PointerBehavior.AlwaysOff);
-        PointerUtils.SetGazePointerBehavior(PointerBehavior.AlwaysOff);
-        PointerUtils.SetHandGrabPointerBehavior(PointerBehavior.AlwaysOff);
+        PointerUtils.SetHandRayPointerBehavior(handRayPointerBehavior);
+        PointerUtils.SetGazePointerBehavior(gazePointerBehavior);
+        PointerUtils.SetHandGrabPointerBehavior(handGrabPointerBehavior);
     }
 }

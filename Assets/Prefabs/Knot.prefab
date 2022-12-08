@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 7473967679118298046}
   - component: {fileID: 9075915465202482382}
   - component: {fileID: 766207645828708389}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Knot
-  m_TagString: Untagged
+  m_TagString: Object
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 1825974325364009401}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.03, y: 0.03, z: 0.03}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6861adb707ef30c499f75bc48cd56763, type: 2}
+  - {fileID: 2100000, guid: e18dc7b7b1687614aa942058f34578e4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -127,31 +127,55 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _transform: {fileID: 7308453002420064689}
   _meshRenderer: {fileID: 1652923512961531}
-  _selected: 0
-  _selectable: 1
   _destroyable: 1
   _hovered: 0
   _hoverable: 1
+  _selected: 0
+  _selectable: 1
+  _onSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  _onDeselected:
+    m_PersistentCalls:
+      m_Calls: []
   _beingTranslated: 0
   _translateable: 1
-  translationConfiguration:
+  _translationConfiguration:
     axisConstraint:
       x: 0
       y: 0
       z: 0
     widgetSize: 0
     allowFarInteraction: 0
+  _onTranslateBegin:
+    m_PersistentCalls:
+      m_Calls: []
+  _onTranslateEnd:
+    m_PersistentCalls:
+      m_Calls: []
   _beingRotated: 0
   _rotatable: 1
-  rotationConfiguration:
+  _rotationConfiguration:
     axisConstraint:
       x: 0
       y: 0
       z: 0
     widgetSize: 0
     allowFarInteraction: 0
+  _onRotateBegin:
+    m_PersistentCalls:
+      m_Calls: []
+  _onRotateEnd:
+    m_PersistentCalls:
+      m_Calls: []
   _beingScaled: 0
   _scalable: 0
+  _onScaleBegin:
+    m_PersistentCalls:
+      m_Calls: []
+  _onScaleEnd:
+    m_PersistentCalls:
+      m_Calls: []
   scaleConfiguration:
     minScale: {x: 0, y: 0, z: 0}
     maxScale: {x: 0, y: 0, z: 0}

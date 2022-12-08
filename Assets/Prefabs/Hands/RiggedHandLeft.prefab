@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1867417485355804207}
   - component: {fileID: 4885076654118941017}
   - component: {fileID: 3168543605666203450}
+  - component: {fileID: 1849054790016309165}
   m_Layer: 0
   m_Name: RiggedHandLeft
   m_TagString: Untagged
@@ -101,6 +102,24 @@ MonoBehaviour:
     constantValue: {fileID: 0}
     variable: {fileID: 11400000, guid: 70ace2b269a3a894f9e8b032dbd3927c, type: 2}
   gameObjectToRegister: {fileID: 705926914946997735}
+--- !u!114 &1849054790016309165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 61451597023024772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fe7fd3f6adfce246a0256871cd8574a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handObjectRef:
+    useConstant: 0
+    foldout: 0
+    constantValue: {fileID: 0}
+    variable: {fileID: 11400000, guid: 1c8d315b055b6c0448769919b02a309f, type: 2}
+  gameObjectToRegister: {fileID: 705926914946997753}
 --- !u!1 &8840830397674608770
 GameObject:
   m_ObjectHideFlags: 0
@@ -148,6 +167,8 @@ MonoBehaviour:
   objectEventReference: {fileID: 11400000, guid: 7b95ca5a5f88db84eae2a69e270f302e, type: 2}
   _onCreate: 1
   _onDestroy: 1
+  _onEnable: 0
+  _onDisable: 0
 --- !u!1001 &705926914946898755
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -270,8 +291,32 @@ MonoBehaviour:
   objectEventReference: {fileID: 11400000, guid: 6a80fcf363a637348a928acf4f12d6b0, type: 2}
   _onCreate: 1
   _onDestroy: 1
+  _onEnable: 1
+  _onDisable: 1
 --- !u!1 &705926914946997735 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100004, guid: 95fdbeee899cda941a9083788b822772, type: 3}
+  m_PrefabInstance: {fileID: 705926914946898755}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &367961365220238896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 705926914946997735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 271f473e8ae7e0a4c9234435dbf9a0fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectEventReference: {fileID: 11400000, guid: c9d2b9b0abca8d447b7ecd7b6992ab09, type: 2}
+  _onCreate: 1
+  _onDestroy: 1
+  _onEnable: 1
+  _onDisable: 1
+--- !u!1 &705926914946997753 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100026, guid: 95fdbeee899cda941a9083788b822772, type: 3}
   m_PrefabInstance: {fileID: 705926914946898755}
   m_PrefabAsset: {fileID: 0}

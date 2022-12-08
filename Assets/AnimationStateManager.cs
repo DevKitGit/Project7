@@ -7,14 +7,7 @@ using UnityEngine.Splines;
 
 public class AnimationStateManager : MonoBehaviour
 {
-    [SerializeField,ReadOnly] AnimationState animationState = AnimationState.Stopped;
-    [Serializable]
-    public enum AnimationState
-    {
-        Stopped = 0,
-        Playing = 1,
-        Paused = 2
-    }
+    [SerializeField,ReadOnly] AnimationState _animationState = AnimationState.Stopped;
 
     private List<GenericInteractable> interactablesWithAnimation = new List<GenericInteractable>();
     private List<SplineAnimate> splineAnimates = new List<SplineAnimate>();
@@ -35,7 +28,7 @@ public class AnimationStateManager : MonoBehaviour
     }
     private void SetAnimationState(AnimationState state)
     {
-        switch (animationState)
+        switch (_animationState)
         {
             case AnimationState.Stopped:
                 switch (state)
@@ -84,7 +77,7 @@ public class AnimationStateManager : MonoBehaviour
             default:
                 throw new ArgumentOutOfRangeException();
         }
-        animationState = state;
+        _animationState = state;
     }
 
     private void ResumeAnimations()

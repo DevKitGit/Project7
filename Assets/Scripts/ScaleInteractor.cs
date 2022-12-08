@@ -91,12 +91,12 @@ public class ScaleInteractor : MonoBehaviour
 
     private void ConditionalActivation()
     {
-        if (!_leftGestureActive || !_rightGestureActive)
+        if (!_leftGestureActive || !_rightGestureActive || !_rightTrackingActive || !_leftTrackingActive)
         {
             scalingActive = false;
             if (_currentSelection != null)
             {
-                _currentSelection.StopTranslation();
+                _currentSelection.StopScaling();
             }
             return;
         }

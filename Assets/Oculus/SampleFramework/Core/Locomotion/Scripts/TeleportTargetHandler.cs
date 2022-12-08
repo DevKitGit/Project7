@@ -65,7 +65,7 @@ public abstract class TeleportTargetHandler : TeleportSupport
 			ResetAimData();
 
 			// Start the testing with the character's current position to the aiming origin to ensure they 
-			// haven't just stuck their hand through something that should have prevented movement.
+			// haven't just stuck their leftInteractor through something that should have prevented movement.
 			//
 			// The first test won't be added to the aim data results because the visual effects should be from
 			// the aiming origin.

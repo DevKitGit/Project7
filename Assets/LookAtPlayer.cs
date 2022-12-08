@@ -5,11 +5,14 @@ using UnityEngine;
 
 public class LookAtPlayer : MonoBehaviour
 {
+    private Vector3 posholder;
     void Update()
     {
         if (CameraCache.Main != null)
         {
-            transform.LookAt(CameraCache.Main.transform.position, Vector3.forward);
+            posholder = CameraCache.Main.transform.position;
+            posholder.y = transform.position.y;
+            transform.LookAt(posholder, Vector3.forward);
         }
     }
 }

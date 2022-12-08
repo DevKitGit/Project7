@@ -29,7 +29,7 @@ using UnityEngine.SceneManagement;
 
 namespace OVRTouchSample
 {
-    // Animated hand visuals for a user of a Touch controller.
+    // Animated leftInteractor visuals for a user of a Touch controller.
     [RequireComponent(typeof(OVRGrabber))]
     public class Hand : MonoBehaviour
     {
@@ -86,7 +86,7 @@ namespace OVRTouchSample
             m_colliders = this.GetComponentsInChildren<Collider>().Where(childCollider => !childCollider.isTrigger).ToArray();
             CollisionEnable(false);
 
-            // Get animator layer indices by name, for later use switching between hand visuals
+            // Get animator layer indices by name, for later use switching between leftInteractor visuals
             m_animLayerIndexPoint = m_animator.GetLayerIndex(ANIM_LAYER_NAME_POINT);
             m_animLayerIndexThumb = m_animator.GetLayerIndex(ANIM_LAYER_NAME_THUMB);
             m_animParamIndexFlex = Animator.StringToHash(ANIM_PARAM_NAME_FLEX);
@@ -205,7 +205,7 @@ namespace OVRTouchSample
             m_animator.SetInteger(m_animParamIndexPose, (int)handPoseId);
 
             // Flex
-            // blend between open hand and fully closed fist
+            // blend between open leftInteractor and fully closed fist
             float flex = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, m_controller);
             m_animator.SetFloat(m_animParamIndexFlex, flex);
 

@@ -369,7 +369,7 @@ namespace OculusSampleFramework
 		private bool PassPerpTest(InteractableTool collidingTool, Vector3 buttonDirection)
 		{
 			// the "right" vector points along tool by default
-			// if it's right hand, then flip that direction
+			// if it's right leftInteractor, then flip that direction
 			var toolDirection = collidingTool.ToolTransform.right;
 			if (collidingTool.IsRightHandedTool)
 			{

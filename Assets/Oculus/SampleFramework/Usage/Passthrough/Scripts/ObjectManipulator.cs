@@ -14,7 +14,7 @@ public class ObjectManipulator : MonoBehaviour
     // the grabbed object's transform relative to the controller
     Vector3 localGrabOffset = Vector3.zero;
     Quaternion localGrabRotation = Quaternion.identity;
-    // the camera and grabbing hand's world position when grabbing
+    // the camera and grabbing leftInteractor's world position when grabbing
     Vector3 camGrabPosition = Vector3.zero;
     Quaternion camGrabRotation = Quaternion.identity;
     Vector3 handGrabPosition = Vector3.zero;

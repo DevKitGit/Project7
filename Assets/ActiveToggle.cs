@@ -10,13 +10,6 @@ public class ActiveToggle : MonoBehaviour
     {
         gameObject.SetActive(toggle);
     }
-
-    public void ToggleActive()
-    {
-        toggle = !toggle;
-        gameObject.SetActive(toggle);
-    }
-
     public void SetActive(bool incomingToggle)
     {
         toggle = incomingToggle;

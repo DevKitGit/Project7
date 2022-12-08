@@ -2,13 +2,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.MixedReality.Toolkit;
 using Unity.Mathematics;
+using UnityEditor.Events;
 using UnityEngine;
 using UnityEngine.Splines;
 
 public class RuntimeKnotGenerator : MonoBehaviour
 {
     [SerializeField] private GameObject _knotPrefab;
+    [SerializeField] private Transform childList;
     
     private List<GameObject> _knotGameObjects = new(50);
     
@@ -23,6 +26,7 @@ public class RuntimeKnotGenerator : MonoBehaviour
     void Start()
     {
         _splineExtrude = GetComponent<SplineExtrude>();
+        SplineUtility
         GenerateInitialKnot();
         _splineExtrude.Spline.SetTangentMode(TangentMode.AutoSmooth);
     }
@@ -44,48 +48,59 @@ public class RuntimeKnotGenerator : MonoBehaviour
                 i--;
                 changed = true;
                 _splineExtrude.Rebuild();
-
-                continue;
             }
-            /*if (!DoesTransformMatchKnot(_knotGameObjects[i].transform.position,_knotGameObjects[i].transform.rotation, _splineContainer.Spline[i]))
-            {
-                var knot = new BezierKnot(
-                    _knotGameObjects[i].transform.localPosition,
-                    float3.zero,
-                    float3.zero,
-                    Quaternion.Euler(Vector3.forward));
-                _splineContainer.Spline.RemoveAt(i);
-                _splineContainer.Spline.Insert(i,knot);
-                changed = true;
-            }*/
         }
-
-        _splineExtrude.Spline.SetTangentMode(TangentMode.AutoSmooth);
+        if (changed)
+        {
+            _splineExtrude.Spline.SetTangentMode(TangentMode.AutoSmooth);
+        }
+        
     }
 
-    private bool DoesTransformMatchKnot(Vector3 p, Quaternion q, BezierKnot k)
+    public void OnKnotMoved(Vector3 newKnotPos)
     {
-        float TOLERANCE = 0.01f;
-        return Math.Abs(p.x - k.Position.x) < TOLERANCE &&
-               Math.Abs(p.y - k.Position.y) < TOLERANCE &&
-               Math.Abs(p.z - k.Position.z) < TOLERANCE &&
-               q == k.Rotation;
+        for (var i = 0; i < _knotGameObjects.Count; i++)
+        {
+            if (_knotGameObjects[i] == null)
+            {
+                _splineExtrude.Spline.RemoveAt(i);
+                _knotGameObjects.RemoveAt(i);
+                i--;
+                _splineExtrude.Rebuild();
+            }
+            else
+            {
+                _splineExtrude.Spline.SetKnotNoNotify(i, new BezierKnot(transform.InverseTransformPoint(_knotGameObjects[i].transform.position)));
+            }
+        }
+        _splineExtrude.Rebuild();
     }
 
+    private Vector3 initialPosition;
+
+    public void OnSpawnerTranslateBegun(Vector3 position)
+    {
+        initialPosition = position;
+    }
     public void AddPointToEnd(Vector3 position)
     {
         var bezierKnot = new BezierKnot(transform.InverseTransformPoint(position));
         _splineExtrude.Spline.Add(bezierKnot,TangentMode.AutoSmooth);
-        var knot = Instantiate(_knotPrefab,position,Quaternion.identity,transform);
+        var knot = Instantiate(_knotPrefab,position,Quaternion.identity,childList);
+        UnityEventTools.AddPersistentListener(knot.GetComponent<GenericInteractable>()._onTranslateEnd, OnKnotMoved);
+        
+        //knot.GetComponent<GenericInteractable>()._onTranslateEnd.A(OnKnotMoved);
         _knotGameObjects.Add(knot);
         _splineExtrude.Rebuild();
     }
     private void GenerateInitialKnot()
     {
         _splineExtrude.Spline.Add(new BezierKnot(float3.zero),TangentMode.AutoSmooth);
-        var initialKnot = Instantiate(_knotPrefab,transform.TransformPoint(0,0,0),Quaternion.Euler(Vector3.forward),transform);
+        var initialKnot = Instantiate(_knotPrefab,transform.TransformPoint(0,0,0),Quaternion.Euler(Vector3.forward),childList);
+        initialKnot.GetComponent<GenericInteractable>().SetDestroyable(false);
+        gameObject.layer = LayerMask.NameToLayer("Default");
         _knotGameObjects.Add(initialKnot);
         _splineExtrude.Rebuild();
-
     }
+    
 }

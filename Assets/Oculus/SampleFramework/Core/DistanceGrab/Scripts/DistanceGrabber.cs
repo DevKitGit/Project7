@@ -35,12 +35,12 @@ namespace OculusSampleFramework
     [RequireComponent(typeof(Rigidbody))]
     public class DistanceGrabber : OVRGrabber
     {
-        // Radius of sphere used in spherecast from hand along forward ray to find target object.
+        // Radius of sphere used in spherecast from leftInteractor along forward ray to find target object.
         [SerializeField]
         float m_spherecastRadius = 0;
 
         // Distance below which no-snap objects won't be teleported, but will instead be left
-        // where they are in relation to the hand.
+        // where they are in relation to the leftInteractor.
         [SerializeField]
         float m_noSnapThreshhold = 0.05f;
 
@@ -66,7 +66,7 @@ namespace OculusSampleFramework
 
         bool m_movingObjectToHand = false;
 
-        // Objects can be distance grabbed up to this distance from the hand.
+        // Objects can be distance grabbed up to this distance from the leftInteractor.
         [SerializeField]
         float m_maxGrabDistance;
 
@@ -178,7 +178,7 @@ namespace OculusSampleFramework
                 }
                 else
                 {
-                    // Set up offsets for grabbed object desired position relative to hand.
+                    // Set up offsets for grabbed object desired position relative to leftInteractor.
                     m_grabbedObjectPosOff = m_gripTransform.localPosition;
                     if (m_grabbedObj.snapOffset)
                     {

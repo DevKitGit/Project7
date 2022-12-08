@@ -11,9 +11,24 @@ public class InteractableTaskVariable : BaseVariable<InteractableTask>
 }
 
 [Serializable]
-public class InteractableTask
+public struct InteractableTask
+{ 
+    [SerializeField] private TaskType taskType;
+    [SerializeField] private string taskDescription;
+}
+
+public enum TaskType
 {
-    private GameObject taskGameobject;
-    private string taskString;
+    TestStarted, //The test was started
+    ObjectSpawned, //The intended object was spawned
+    SplineCreated, //The right sp
+    SplineKnotCreated,
+    ObjectPlacedOnSpline,
+    AnimationDone,
+    TestDone
+}
+
+public enum ErrorType
+{
     
 }

@@ -25,7 +25,7 @@ public class SelectivePassthroughExperience : MonoBehaviour
             leftMaskObject.transform.position = Lpos;
             rightMaskObject.transform.position = Rpos;
         }
-        // hand masks are an inflated hands shader, with alpha fading at wrists and edges
+        // leftInteractor masks are an inflated hands shader, with alpha fading at wrists and edges
         else if (OVRInput.GetActiveController() == OVRInput.Controller.LHand ||
           OVRInput.GetActiveController() == OVRInput.Controller.RHand ||
           OVRInput.GetActiveController() == OVRInput.Controller.Hands)

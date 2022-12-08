@@ -54,7 +54,7 @@ namespace OculusSampleFramework
 				yield return null;
 			}
 
-			// create set of tools per hand to be safe
+			// create set of tools per leftInteractor to be safe
 			HashSet<Transform> toolObjectSet = new HashSet<Transform>();
 			foreach (Transform toolTransform in toolObjects)
 			{

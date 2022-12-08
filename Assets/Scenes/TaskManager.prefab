@@ -1,0 +1,161 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6861755279218701745
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6861755279218701751}
+  - component: {fileID: 6861755279218701750}
+  - component: {fileID: 6861755279218701744}
+  m_Layer: 0
+  m_Name: TaskManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6861755279218701751
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6861755279218701745}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 14
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6861755279218701750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6861755279218701745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8044bb5719035e14ab33f5a950770e12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CreateMetaCollection: 0
+  enableMySQLSave: 0
+  email: 
+  connectToMySQL: {fileID: 0}
+  enableCSVSave: 1
+  logStringOverTime: 0
+  savePath: 
+  filePrefix: log
+  fileExtension: .csv
+--- !u!114 &6861755279218701744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6861755279218701745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62765d9c04cab0e41a4a08a248359f2f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _currentTaskDescription:
+    useConstant: 0
+    foldout: 0
+    constantValue: 
+    variable: {fileID: 11400000, guid: 6d6902a42e3d9754190dd2fd7be097d2, type: 2}
+  currentIndex: 0
+  _debugMode: 1
+  _condition: 1
+  tasks:
+  - useConstant: 0
+    foldout: 0
+    constantValue: 
+    variable: {fileID: 11400000, guid: 2beb74214e4888244b58c8cd063bd7f0, type: 2}
+  - useConstant: 0
+    foldout: 0
+    constantValue: 
+    variable: {fileID: 11400000, guid: f2a3f5f31082ef149bd5b11b1a5f41e3, type: 2}
+  - useConstant: 0
+    foldout: 0
+    constantValue: 
+    variable: {fileID: 11400000, guid: 6b84ac24dd16ac041938048cb0ae44be, type: 2}
+  - useConstant: 0
+    foldout: 0
+    constantValue: 
+    variable: {fileID: 11400000, guid: 977b859cfdeeace4d8ccb5b59d19e95d, type: 2}
+  - useConstant: 0
+    foldout: 0
+    constantValue: 
+    variable: {fileID: 11400000, guid: add0b3216bda948429cba152735784eb, type: 2}
+  - useConstant: 0
+    foldout: 0
+    constantValue: 
+    variable: {fileID: 11400000, guid: 3b7e634893f9f1e418c15584399ac9ba, type: 2}
+  - useConstant: 0
+    foldout: 0
+    constantValue: 
+    variable: {fileID: 11400000, guid: 6097f6c52c47f0f48b01dd0a118295e7, type: 2}
+  - useConstant: 0
+    foldout: 0
+    constantValue: 
+    variable: {fileID: 11400000, guid: 8b5e71d09b0048b429d9aaef732ce224, type: 2}
+  - useConstant: 0
+    foldout: 0
+    constantValue: 
+    variable: {fileID: 11400000, guid: 52c730366fb1d5c47adc543b134be1be, type: 2}
+  - useConstant: 0
+    foldout: 0
+    constantValue: 
+    variable: {fileID: 11400000, guid: 0a5482bd9e9166a4687dcd6400dc2f2c, type: 2}
+  - useConstant: 0
+    foldout: 0
+    constantValue: 
+    variable: {fileID: 11400000, guid: 82a34870780b1a949b74932c500f1a03, type: 2}
+  - useConstant: 0
+    foldout: 0
+    constantValue: 
+    variable: {fileID: 11400000, guid: 66fb385b9bd89a347afe796c86ec5705, type: 2}
+  - useConstant: 0
+    foldout: 0
+    constantValue: 
+    variable: {fileID: 11400000, guid: ce21ebe404ebebd44b70d61ba13499da, type: 2}
+  - useConstant: 0
+    foldout: 0
+    constantValue: 
+    variable: {fileID: 11400000, guid: 136e36b5dea2d364e867c63e611abe10, type: 2}
+  - useConstant: 0
+    foldout: 0
+    constantValue: 
+    variable: {fileID: 11400000, guid: a4cae4c6b50d47f47835ade199faa4ae, type: 2}
+  - useConstant: 0
+    foldout: 0
+    constantValue: 
+    variable: {fileID: 11400000, guid: dd845767e0e80c14d89495510846d06f, type: 2}
+  - useConstant: 0
+    foldout: 0
+    constantValue: 
+    variable: {fileID: 11400000, guid: 5c733fdfd3ce9b74091a2baead9b45c6, type: 2}
+  - useConstant: 0
+    foldout: 0
+    constantValue: 
+    variable: {fileID: 11400000, guid: f305b13eaac90174291c18e7c5db3206, type: 2}
+  - useConstant: 0
+    foldout: 0
+    constantValue: 
+    variable: {fileID: 11400000, guid: 9e9564da3dd575b4b98ce5e44d0690ad, type: 2}
+  - useConstant: 0
+    foldout: 0
+    constantValue: 
+    variable: {fileID: 11400000, guid: 4f360eb3ab715874e931679ff63d97f2, type: 2}
+  - useConstant: 0
+    foldout: 0
+    constantValue: 
+    variable: {fileID: 11400000, guid: 27b5c739d66e29a4085b60b9743a6996, type: 2}

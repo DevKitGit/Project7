@@ -163,7 +163,7 @@ public class GestureIOCoroutine : MonoBehaviour
     }*/
     private void PostProcess(ref float[] res)
     {
-        //first figure out if the hand is facing up or downwards in relation to the world, decides of hover or teleport hover
+        //first figure out if the leftInteractor is facing up or downwards in relation to the world, decides of hover or teleport hover
         bool palmFacingDown = Math.Abs(math.sign(math.dot(Vector3.down, -jointPoses[TrackedHandJoint.Palm].Up)) - 1f) < 0.001f;
         if (palmFacingDown)
         {

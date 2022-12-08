@@ -13,7 +13,7 @@ public class MakeRuntimeMesh : MonoBehaviour
         }
     }
 
-    private void Start()
+    private void Awake()
     {
         if (GetComponent<MeshFilter>().sharedMesh == null)
         {

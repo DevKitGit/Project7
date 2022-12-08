@@ -67,17 +67,7 @@ public class DynamicGestureValidator : MonoBehaviour
         {
             if (_currentGesture.gestureID != _lastGesture.gestureID)
             {
-                _GestureStopped.Invoke();
-                if (_currentGesture.gestureID == Gesture.GestureID.None)
-                {
-                    _gestureIdReference.Value = _currentGesture.gestureID;
-
-                }
-                else
-                {
-                    _gestureIdReference.Value = _currentGesture.gestureID;
-                }
-                _GestureStarted.Invoke();
+                _gestureIdReference.Value = _currentGesture.gestureID;
                 _lastGesture = _currentGesture;
             }
             return;
@@ -88,8 +78,6 @@ public class DynamicGestureValidator : MonoBehaviour
         {
             return;
         }
-        _gestureIdReference.Value = _currentGesture.gestureID;
-        _GestureStopped.Invoke();
         _currentGesture = new Detection(Gesture.GestureID.None, 0f);
         var highestConfidence = new Detection(Gesture.GestureID.None, 0f);
         //if this runs, no gesture is being made, so we look for the one with the highest score
@@ -103,11 +91,11 @@ public class DynamicGestureValidator : MonoBehaviour
         if (highestConfidence.confidence <= gestureInitializationReq)
         {
             _currentGesture.confidence = 0f;
+            _gestureIdReference.Value = Gesture.GestureID.None;
             return;
         }
         _currentGesture = highestConfidence;
         _gestureIdReference.Value = _currentGesture.gestureID;
-        _GestureStarted.Invoke();
     }
     public void PushRemoteDetectionToQueue(float[] detections)
     {
