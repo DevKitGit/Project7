@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7473967679118298046}
   - component: {fileID: 9075915465202482382}
   - component: {fileID: 766207645828708389}
+  - component: {fileID: 5177805601600540934}
   m_Layer: 8
   m_Name: Knot
   m_TagString: Object
@@ -130,6 +131,21 @@ MonoBehaviour:
   _destroyable: 1
   _hovered: 0
   _hoverable: 1
+  OnDestroyed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5177805601600540934}
+        m_TargetAssemblyTypeName: InteractableInvokable, Assembly-CSharp
+        m_MethodName: OnKnotDestroyed
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _selected: 0
   _selectable: 1
   _onSelected:
@@ -152,7 +168,19 @@ MonoBehaviour:
       m_Calls: []
   _onTranslateEnd:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5177805601600540934}
+        m_TargetAssemblyTypeName: InteractableInvokable, Assembly-CSharp
+        m_MethodName: OnKnotMoved
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _beingRotated: 0
   _rotatable: 1
   _rotationConfiguration:
@@ -179,3 +207,15 @@ MonoBehaviour:
   scaleConfiguration:
     minScale: {x: 0, y: 0, z: 0}
     maxScale: {x: 0, y: 0, z: 0}
+--- !u!114 &5177805601600540934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1825974325364009401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fe9e8d930ea5f143873519d9f76655a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -48,6 +48,10 @@ public abstract class GenericInteractor : MonoBehaviour
             {
                 if (_condition.Value == VRInputType.Hands)
                 {
+                    if (_condition.Value == VRInputType.Controllers)
+                    {
+                        //do nothing because why the fuck not
+                    }
                     leftInteractor = HandJointUtils.FindHand(Handedness.Left);
                     if (leftInteractor == null || leftInteractor.TrackingState == TrackingState.NotTracked)
                     {

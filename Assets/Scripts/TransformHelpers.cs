@@ -40,7 +40,6 @@ public static class TransformHelpers
     /// <param name="scaleFactor">The new localScale the target object will have after scaling.</param>
     public static void ScaleAround(this Transform target, Vector3 pivot, Vector3 newScale)
     {
-        // pivot
         Vector3 pivotDelta = target.localPosition - pivot; // diff from object pivot to desired pivot/origin
         Vector3 scaleFactor = new Vector3(
             newScale.x / target.localScale.x,
@@ -48,12 +47,6 @@ public static class TransformHelpers
             newScale.z / target.localScale.z );
         pivotDelta.Scale(scaleFactor);
         target.transform.localPosition = pivot + pivotDelta;
- 
-        //scale
-        if (float.IsNaN(newScale.x) || float.IsNaN(newScale.y) || float.IsNaN(newScale.z))
-        {
-            newScale = new Vector3(0.001f, 0.001f, 0.001f);
-        }
         target.localScale = newScale;
     }
     
@@ -67,17 +60,6 @@ public static class TransformHelpers
     /// <param name="target">The object to scale.</param>
     /// <param name="pivot">The point to scale around in the space of target.</param>
     /// <param name="scaleFactor">The new localScale the target object will have after scaling.</param>
-    public static void ScaleAroundClamped(this Transform target, Vector3 pivot, Vector3 newScale, Vector3 min, Vector3 max)
-    {
-        // pivot
-        Vector3 pivotDelta = target.localPosition - pivot; // diff from object pivot to desired pivot/origin
-        Vector3 scaleFactor = new Vector3(
-            newScale.x / target.localScale.x,
-            newScale.y / target.localScale.y,
-            newScale.z / target.localScale.z );
-        pivotDelta.Scale(scaleFactor);
-        target.transform.localPosition = pivot + pivotDelta;
-        target.localScale = newScale;
-    }
+
 
 }

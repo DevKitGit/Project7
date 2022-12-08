@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.MixedReality.Toolkit;
 using Unity.Mathematics;
-using UnityEditor.Events;
 using UnityEngine;
 using UnityEngine.Splines;
 
@@ -12,7 +11,8 @@ public class RuntimeKnotGenerator : MonoBehaviour
 {
     [SerializeField] private GameObject _knotPrefab;
     [SerializeField] private Transform childList;
-    
+    [SerializeField,ReadOnly] private bool isKnotBeingMoved;
+    [SerializeField] private float _curvyness;
     private List<GameObject> _knotGameObjects = new(50);
     
     private SplineExtrude _splineExtrude;
@@ -20,15 +20,19 @@ public class RuntimeKnotGenerator : MonoBehaviour
     private bool splineDirtyThisFrame;
     
     private GameObject KnotBeingMoved;
-    [SerializeField,ReadOnly] private bool isKnotBeingMoved;
+
+    private Vector3 initialPosition;
+    private GameObject knotSpawner;
+
+    [SerializeField] private float _minimumDistance;
 
     // Start is called before the first frame update
     void Start()
     {
         _splineExtrude = GetComponent<SplineExtrude>();
-        SplineUtility
         GenerateInitialKnot();
         _splineExtrude.Spline.SetTangentMode(TangentMode.AutoSmooth);
+        knotSpawner = transform.Find("KnotSpawner").gameObject;
     }
 
     private void Update()
@@ -57,7 +61,7 @@ public class RuntimeKnotGenerator : MonoBehaviour
         
     }
 
-    public void OnKnotMoved(Vector3 newKnotPos)
+    public void OnKnotMoved()
     {
         for (var i = 0; i < _knotGameObjects.Count; i++)
         {
@@ -70,13 +74,14 @@ public class RuntimeKnotGenerator : MonoBehaviour
             }
             else
             {
-                _splineExtrude.Spline.SetKnotNoNotify(i, new BezierKnot(transform.InverseTransformPoint(_knotGameObjects[i].transform.position)));
+                var knot = new BezierKnot(transform.InverseTransformPoint(_knotGameObjects[i].transform.position));
+                _splineExtrude.Spline.SetKnot(i, knot);
             }
         }
+        UpdateTension();
         _splineExtrude.Rebuild();
     }
 
-    private Vector3 initialPosition;
 
     public void OnSpawnerTranslateBegun(Vector3 position)
     {
@@ -84,23 +89,62 @@ public class RuntimeKnotGenerator : MonoBehaviour
     }
     public void AddPointToEnd(Vector3 position)
     {
+        if (_splineExtrude.Spline.Count > 2 && !_splineExtrude.Spline.Closed && CheckIfNewPointShouldCloseTheLoop() )
+        {
+            print("closed");
+            _splineExtrude.Spline.Closed = true;
+            UpdateTension();
+            _knotGameObjects.Last().layer = LayerMask.NameToLayer("Interactable");
+            _splineExtrude.Rebuild();
+            return;
+        }
         var bezierKnot = new BezierKnot(transform.InverseTransformPoint(position));
         _splineExtrude.Spline.Add(bezierKnot,TangentMode.AutoSmooth);
+        UpdateTension();
         var knot = Instantiate(_knotPrefab,position,Quaternion.identity,childList);
-        UnityEventTools.AddPersistentListener(knot.GetComponent<GenericInteractable>()._onTranslateEnd, OnKnotMoved);
-        
-        //knot.GetComponent<GenericInteractable>()._onTranslateEnd.A(OnKnotMoved);
+
+        if (_knotGameObjects.Count > 1)
+        {
+            _knotGameObjects.Last().layer = LayerMask.NameToLayer("Interactable");
+        }
         _knotGameObjects.Add(knot);
+        _knotGameObjects.Last().layer = LayerMask.NameToLayer("Default");
         _splineExtrude.Rebuild();
+    }
+
+    private bool CheckIfNewPointShouldCloseTheLoop()
+    {
+        return knotSpawner.transform.GetComponent<Collider>().bounds
+            .Intersects(transform.parent.gameObject.GetComponent<Collider>().bounds);
     }
     private void GenerateInitialKnot()
     {
-        _splineExtrude.Spline.Add(new BezierKnot(float3.zero),TangentMode.AutoSmooth);
+        var knot = new BezierKnot(float3.zero);
+        _splineExtrude.Spline.Add(knot,TangentMode.AutoSmooth);
+        UpdateTension();
         var initialKnot = Instantiate(_knotPrefab,transform.TransformPoint(0,0,0),Quaternion.Euler(Vector3.forward),childList);
         initialKnot.GetComponent<GenericInteractable>().SetDestroyable(false);
         gameObject.layer = LayerMask.NameToLayer("Default");
         _knotGameObjects.Add(initialKnot);
         _splineExtrude.Rebuild();
     }
-    
+
+    private void UpdateTension()
+    {
+        for (int i = 0; i < _splineExtrude.Spline.Count; i++)
+        {
+            _splineExtrude.Spline.SetAutoSmoothTension(i, _curvyness);
+        }
+    }
+
+    public void OnKnotDestroyed(GameObject o)
+    {
+        var index = _knotGameObjects.IndexOf(o);
+        if (index != -1)
+        {
+            _knotGameObjects.RemoveAt(index);
+            _splineExtrude.Spline.RemoveAt(index);
+            _splineExtrude.Rebuild();
+        }
+    }
 }

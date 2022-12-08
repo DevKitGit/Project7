@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Devkit.Modularis.Variables;
@@ -8,11 +7,4 @@ using UnityEngine;
 public class VRInputTypeVariable : BaseVariable<VRInputType>
 {
    
-}
-
-[Serializable]
-public enum VRInputType
-{
-    Controllers = 0,
-    Hands = 1
 }

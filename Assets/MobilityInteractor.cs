@@ -77,7 +77,7 @@ public class MobilityInteractor : GenericInteractor
             newscale.y = Math.Clamp(newscale.y, _minScaleCalc.y, _maxScaleCalc.y);
             newscale.z = Math.Clamp(newscale.z, _minScaleCalc.z, _maxScaleCalc.z);
 
-            _worldTransform.ScaleAroundClamped(_currentMidpoint, newscale, _minScaleCalc ,_maxScaleCalc);
+            _worldTransform.ScaleAround(_currentMidpoint, newscale);
             if (newscale == _minScaleCalc || newscale == _maxScaleCalc)
             {
                 spawnedTargetWidgetMeshRenderer.material.color = Color.red;

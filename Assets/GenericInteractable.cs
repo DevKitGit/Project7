@@ -15,10 +15,16 @@ public class GenericInteractable : MonoBehaviour
     [Header("Hovering")]
     [SerializeField,ReadOnly] private bool _hovered;
     [SerializeField] private bool _hoverable;
-
+    [SerializeField] private UnityEvent<GameObject> OnDestroyed;
+    
 
     public bool Hoverable() => _hoverable && !_hovered;
     public bool Hovered() => _hovered;
+
+    private void OnDestroy()
+    {
+        OnDestroyed.Invoke(gameObject);
+    }
 
     public void SetDestroyable(bool destroyable)
     {
@@ -303,8 +309,8 @@ public struct RotationConfiguration
 [Serializable]
 public struct ScaleConfiguration
 {
-    [SerializeField] private Vector3 minScale;
-    [SerializeField] private Vector3 maxScale;
+    [SerializeField] public Vector3 minScale;
+    [SerializeField] public Vector3 maxScale;
     public void Process(ref Vector3 position)
     {
         position.x = math.clamp(position.x, minScale.x, maxScale.x);

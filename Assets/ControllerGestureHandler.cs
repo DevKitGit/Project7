@@ -13,23 +13,28 @@ public class ControllerGestureHandler : MonoBehaviour
     [SerializeField] private GestureIdReference _actionToOutput;
     [SerializeField, Range(0f, 1f)] private float selectActivationMinValue;
     [SerializeField, Range(0f, 1f)] private float hoverActivationMinValue;
+    [SerializeField, Range(0f, 1f)] private float grabActivationMinValue;
 
     private RawButton currButtonPress = RawButton.None;
     private RawAxis1D currAxisPress = RawAxis1D.None;
+
     private void Update()
     {
-        CheckIfHoverOrSelect();
+        CheckIfTranslate();
+        if (_actionToOutput.Value != Gesture.GestureID.Translate)
+        {
+            CheckIfHoverOrSelect();
+        }
         if (hand == Handedness.Left)
         {
-            OnButtonPressed(Gesture.GestureID.Scale, RawButton.Y);
+            OnButtonPressed(Gesture.GestureID.Scale, RawButton.X);
         }
 
         if (hand == Handedness.Right)
         {
-            OnButtonPressed(Gesture.GestureID.Scale,RawButton.B);
+            OnButtonPressed(Gesture.GestureID.Scale,RawButton.A);
         }
-        OnButtonPressed(Gesture.GestureID.Rotate, RawButton.X);
-        OnButtonPressed(Gesture.GestureID.Translate, RawButton.A);
+        //OnButtonPressed(Gesture.GestureID.Rotate, RawButton.X);
         
         if (CurrButtonReleased())
         {
@@ -38,6 +43,31 @@ public class ControllerGestureHandler : MonoBehaviour
         }
     }
 
+    private void CheckIfTranslate()
+    {
+        Controller controller = Controller.None;
+        var value = hand switch
+        {
+            Handedness.Left => Get(RawAxis1D.LHandTrigger),
+            Handedness.Right => Get(RawAxis1D.RHandTrigger),
+            _ => 0f
+        };
+        if (value > grabActivationMinValue)
+        {
+            if (_actionToOutput.Value == Gesture.GestureID.Translate)
+            {
+                return;
+            }
+            
+            _actionToOutput.Value = Gesture.GestureID.Translate;
+            return;
+        }
+        if (!(value <= grabActivationMinValue)) return;
+        if (_actionToOutput.Value == Gesture.GestureID.Translate)
+        {
+            _actionToOutput.Value = Gesture.GestureID.None;
+        }
+    }
     private void CheckIfHoverOrSelect()
     {
         Controller controller = Controller.None;
@@ -75,29 +105,26 @@ public class ControllerGestureHandler : MonoBehaviour
     }
     public bool CurrButtonReleased()
     {
-        return currButtonPress != RawButton.None && GetUp(currButtonPress);
+        return currButtonPress != RawButton.None && !Get(currButtonPress);
     }
-    public void OnButtonPressed(Gesture.GestureID action, RawButton button = RawButton.None)
+    public void OnButtonPressed(Gesture.GestureID action, RawButton button)
     {
-        if (button != RawButton.None)
+        //we now know it's a button press
+        if (currButtonPress == RawButton.None)
         {
-            //we now know it's a button press
-            if (currButtonPress == RawButton.None)
+            //no button press is currently being done
+            if (GetDown(button) && _actionToOutput.Value != action )
             {
-                //no button press is currently being done
-                if (GetDown(button) && _actionToOutput.Value != action )
-                {
-                    _actionToOutput.Value = action;
-                    currButtonPress = button;
-                }
-            }else if (currButtonPress != button)
+                _actionToOutput.Value = action;
+                currButtonPress = button;
+            }
+        }else if (currButtonPress != button)
+        {
+            //we now know it's a button press, and that a button press is currently being done that isn't this button
+            if (GetDown(button) && _actionToOutput.Value != action )
             {
-                //we now know it's a button press, and that a button press is currently being done that isn't this button
-                if (GetDown(button) && _actionToOutput.Value != action )
-                {
-                    _actionToOutput.Value = action;
-                    currButtonPress = button;
-                }
+                _actionToOutput.Value = action;
+                currButtonPress = button;
             }
         }
     }

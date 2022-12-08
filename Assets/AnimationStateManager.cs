@@ -82,23 +82,65 @@ public class AnimationStateManager : MonoBehaviour
 
     private void ResumeAnimations()
     {
-        interactablesWithAnimation.ForEach(e => e.ResumeAnimation());
+        splineAnimates = FindObjectsOfType<SplineAnimate>().ToList();
+        foreach (var splineAnimate in splineAnimates)
+        {
+            if (splineAnimate == null) { continue; }
+            if (splineAnimate.enabled && splineAnimate.Container != null)
+            {
+                splineAnimate.Loop = splineAnimate.Container.Spline.Closed ? SplineAnimate.LoopMode.Loop : SplineAnimate.LoopMode.Once;
+                splineAnimate.Play();
+            }
+        }
     }
 
     private void StopAnimations()
     {
-        interactablesWithAnimation.ForEach(e => e.StopAnimation());
-        interactablesWithAnimation.Clear();
+        splineAnimates = FindObjectsOfType<SplineAnimate>().ToList();
+
+        foreach (var splineAnimate in splineAnimates)
+        {
+            if (splineAnimate == null) { continue; }
+
+            if (splineAnimate.enabled && splineAnimate.Container != null)
+            {
+                splineAnimate.Restart(false);
+            }
+        }
     }
 
     private void PauseAnimations()
     {
-        interactablesWithAnimation.ForEach(e => e.PauseAnimation());
+        splineAnimates = FindObjectsOfType<SplineAnimate>().ToList();
+
+        foreach (var splineAnimate in splineAnimates)
+        {
+            if (splineAnimate == null) { continue; }
+
+            if (splineAnimate.enabled && splineAnimate.Container != null)
+            {
+                splineAnimate.Pause();
+            }
+        }
+        //interactablesWithAnimation.ForEach(e => e.PauseAnimation());
     }
 
     private void PlayAnimations()
     {
-        interactablesWithAnimation = FindObjectsOfType<GenericInteractable>().ToList();
-        interactablesWithAnimation.ForEach(e => e.PlayAnimation());
+        splineAnimates = FindObjectsOfType<SplineAnimate>().ToList();
+        
+        foreach (var splineAnimate in splineAnimates)
+        {
+            if (splineAnimate == null) { continue; }
+
+            if (splineAnimate.enabled && splineAnimate.Container != null)
+            {
+                splineAnimate.Loop = splineAnimate.Container.Spline.Closed ? SplineAnimate.LoopMode.Loop : SplineAnimate.LoopMode.Once;
+                splineAnimate.Play();
+            }
+        }
+        
+        //interactablesWithAnimation = FindObjectsOfType<GenericInteractable>().ToList();
+        //interactablesWithAnimation.ForEach(e => e.PlayAnimation());
     }
 }

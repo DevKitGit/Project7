@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 3624683860577840880}
   - component: {fileID: -6201074975450809015}
   - component: {fileID: 3766533850909198471}
+  - component: {fileID: 4824080709318054473}
+  - component: {fileID: 2467545989927537947}
   m_Layer: 8
   m_Name: Planet A
   m_TagString: Object
@@ -119,6 +121,9 @@ MonoBehaviour:
   _destroyable: 1
   _hovered: 0
   _hoverable: 1
+  OnDestroyed:
+    m_PersistentCalls:
+      m_Calls: []
   _selected: 0
   _selectable: 1
   _onSelected:
@@ -141,7 +146,19 @@ MonoBehaviour:
       m_Calls: []
   _onTranslateEnd:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4824080709318054473}
+        m_TargetAssemblyTypeName: CheckIfShouldSlotOntoSpline, Assembly-CSharp
+        m_MethodName: OnTranslateEnd
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _beingRotated: 0
   _rotatable: 1
   _rotationConfiguration:
@@ -181,3 +198,38 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 1.0428421
   m_Center: {x: -0.0067237616, y: 0.01311332, z: 0.0014701486}
+--- !u!114 &4824080709318054473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2942122148357876460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 513a0774412c13e49bf59df298b45561, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2467545989927537947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2942122148357876460}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29a074d529cf945029ef7cf40540c9df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Target: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_LoopMode: 1
+  m_Method: 0
+  m_Duration: 1
+  m_MaxSpeed: 10
+  m_EasingMode: 0
+  m_AlignmentMode: 1
+  m_ObjectForwardAxis: 2
+  m_ObjectUpAxis: 1
+  m_StartOffset: 0

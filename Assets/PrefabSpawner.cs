@@ -19,6 +19,18 @@ public class PrefabSpawner : MonoBehaviour
         var rightHand = rightHandReference.Value as GameObject;
         position = Vector3.MoveTowards(position,rightHand.transform.position, 2f);
         var spawn =Instantiate(prefab, position, prefab.transform.rotation,go.transform);
-        spawn.transform.localScale /= go.transform.localScale.x;
+        Vector3 transformLocalScale = Vector3.one;
+
+        if (go.transform.localScale.x == 0)
+        {
+            transformLocalScale = spawn.transform.localScale / transformLocalScale.x;
+            //spawn.GetComponent<GenericInteractable>().scaleConfiguration.Process(ref transformLocalScale);
+        }
+        else
+        {
+            transformLocalScale = spawn.transform.localScale / go.transform.localScale.x;
+            //spawn.GetComponent<GenericInteractable>().scaleConfiguration.Process(ref transformLocalScale);
+        }
+        spawn.transform.localScale = transformLocalScale;
     }
 }
