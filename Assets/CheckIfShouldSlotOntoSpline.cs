@@ -10,6 +10,9 @@ public class CheckIfShouldSlotOntoSpline : MonoBehaviour
     private Collider _collider;
     private SplineAnimate _splineAnimate;
     private RuntimeKnotGenerator currentKnotGenerator;
+    [SerializeField] private LayerMask LayerMask;
+    [SerializeField] private float movementSpeed = 1f;
+
     private void Start()
     {
         _collider = GetComponent<Collider>();
@@ -44,7 +47,7 @@ public class CheckIfShouldSlotOntoSpline : MonoBehaviour
         }
         _splineAnimate.Container = knot.GetComponent<SplineContainer>();
         _splineAnimate.PlayOnAwake = false;
-        _splineAnimate.Duration = _splineAnimate.Container.CalculateLength();
+        _splineAnimate.Duration = _splineAnimate.Container.CalculateLength() * movementSpeed;
         _splineAnimate.enabled = true;
         currentKnotGenerator = knot;
     }
@@ -53,12 +56,12 @@ public class CheckIfShouldSlotOntoSpline : MonoBehaviour
     {
         var average = _collider.bounds.size.x + _collider.bounds.size.y + _collider.bounds.size.z;
         average = (average / 3) * 1.2f;
-        var colliders = Physics.OverlapSphere(gameObject.transform.position, average, LayerMask.NameToLayer("SplineRoot"),QueryTriggerInteraction.Collide);
+        var colliders = Physics.OverlapSphere(gameObject.transform.position, 10f, LayerMask,QueryTriggerInteraction.Collide);
         if (colliders.Length == 0)
         {
             return null;
         }
-        colliders = colliders.Where(e => e.gameObject.gameObject.CompareTag("Spline")).ToArray();
+        colliders = colliders.Where(e => e.gameObject.CompareTag("Spline")).ToArray();
         if (colliders.Length == 0)
         {
             return null;

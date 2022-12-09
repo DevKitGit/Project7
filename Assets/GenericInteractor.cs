@@ -29,7 +29,7 @@ public abstract class GenericInteractor : MonoBehaviour
     [FormerlySerializedAs("_rightHandGesture")] [SerializeField] protected GestureIdReference _rightInteractorGesture;
     [SerializeField] protected bool _rightExceptMode;
     [SerializeField] protected Gesture.GestureID _rightActivationGesture;
-    [SerializeField] protected VRInputTypeReference _condition;
+    [SerializeField] protected IntReference _condition;
     
     protected Transform _leftHandTransform;
     protected Transform _rightHandTransform;
@@ -46,12 +46,9 @@ public abstract class GenericInteractor : MonoBehaviour
         {
             case Handedness.Left:
             {
-                if (_condition.Value == VRInputType.Hands)
+                if (_condition.Value == 0)
                 {
-                    if (_condition.Value == VRInputType.Controllers)
-                    {
-                        //do nothing because why the fuck not
-                    }
+ 
                     leftInteractor = HandJointUtils.FindHand(Handedness.Left);
                     if (leftInteractor == null || leftInteractor.TrackingState == TrackingState.NotTracked)
                     {
@@ -66,7 +63,7 @@ public abstract class GenericInteractor : MonoBehaviour
         }
             case Handedness.Right:
             {
-                if (_condition.Value == VRInputType.Hands)
+                if (_condition.Value == 0)
                 {
                     rightInteractor = HandJointUtils.FindHand(Handedness.Right);
                     if (rightInteractor == null || rightInteractor.TrackingState == TrackingState.NotTracked)
@@ -83,7 +80,7 @@ public abstract class GenericInteractor : MonoBehaviour
             }
             case Handedness.Both:
             {
-                if (_condition.Value == VRInputType.Hands)
+                if (_condition.Value == 0)
                 {
                     leftInteractor = HandJointUtils.FindHand(Handedness.Left);
                     if (leftInteractor == null || leftInteractor.TrackingState == TrackingState.NotTracked)

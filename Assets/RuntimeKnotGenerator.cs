@@ -91,13 +91,14 @@ public class RuntimeKnotGenerator : MonoBehaviour
     {
         if (_splineExtrude.Spline.Count > 2 && !_splineExtrude.Spline.Closed && CheckIfNewPointShouldCloseTheLoop() )
         {
-            print("closed");
             _splineExtrude.Spline.Closed = true;
             UpdateTension();
             _knotGameObjects.Last().layer = LayerMask.NameToLayer("Interactable");
             _splineExtrude.Rebuild();
+            Destroy(knotSpawner);
             return;
         }
+        
         var bezierKnot = new BezierKnot(transform.InverseTransformPoint(position));
         _splineExtrude.Spline.Add(bezierKnot,TangentMode.AutoSmooth);
         UpdateTension();
@@ -124,7 +125,7 @@ public class RuntimeKnotGenerator : MonoBehaviour
         UpdateTension();
         var initialKnot = Instantiate(_knotPrefab,transform.TransformPoint(0,0,0),Quaternion.Euler(Vector3.forward),childList);
         initialKnot.GetComponent<GenericInteractable>().SetDestroyable(false);
-        gameObject.layer = LayerMask.NameToLayer("Default");
+        initialKnot.layer = LayerMask.NameToLayer("SplineRoot");
         _knotGameObjects.Add(initialKnot);
         _splineExtrude.Rebuild();
     }

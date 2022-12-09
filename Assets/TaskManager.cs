@@ -8,36 +8,49 @@ using UnityEngine;
 
 public class TaskManager : MonoBehaviour
 {
-    [SerializeField] private StringReference _currentTaskDescription;
-    [SerializeField] private VRInputTypeReference _condition;
+    [SerializeField] private InteractableTaskReference _currentTaskDescription;
+    [SerializeField] private IntReference _condition;
     [SerializeField,ReadOnly] private int currentIndex = 0;
     [SerializeField] private bool _debugMode;
-    [SerializeField] private List<StringReference> tasks;
+    [SerializeField] private List<InteractableTaskReference> tasks;
+    [SerializeField] private AudioClip TaskCompleteClip;
+    
     private LoggingManager _loggingManager;
+    private AudioSource _audioSource;
     private Stopwatch _stopwatch;
     private readonly string _root = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\P7TaskData";
-    
-
     private void Start()
     {
         _stopwatch = Stopwatch.StartNew();
         _loggingManager = FindObjectOfType<LoggingManager>();
         _loggingManager.SetEmail("NA");
         tasks[currentIndex].RegisterCallback(OnEventCompleted);
+        _audioSource = GetComponent<AudioSource>();
+        Invoke(nameof(DelayedStart),0.1f);
+    }
+
+    private void DelayedStart()
+    {
         _currentTaskDescription.Value = tasks[currentIndex];
     }
 
+    private bool hasSaved = false;
     private void OnEventCompleted()
     {
         LogEvent();
         _stopwatch.Restart();
+        _audioSource.Play();
         tasks[currentIndex].UnregisterCallback(OnEventCompleted);
         currentIndex++;
         
-        if (currentIndex == tasks.Count)
+        if (currentIndex >= tasks.Count)
         {
-            Save();
-            Application.Quit();
+            if (!hasSaved)
+            {
+                Save();
+                hasSaved = true;
+            }
+            //Application.Quit();
             return;
         }
         _currentTaskDescription.Value = tasks[currentIndex];
@@ -48,10 +61,12 @@ public class TaskManager : MonoBehaviour
     {
         var output = new Dictionary<string, object>();
         output.Add("TaskID",currentIndex);
-        output.Add("Condition", Enum.GetName(typeof(VRInputType), _condition.Value));
-        output.Add("Task Description", tasks[currentIndex].Value);
+        output.Add("Condition", _condition.Value == 0 ? "Hands" : "Controllers");
+        output.Add("Task Description", tasks[currentIndex].Value.taskDescription);
+        output.Add("Task Type", tasks[currentIndex].Value.taskType.ToString());
         output.Add("TaskCompletionTimeInMillis",_stopwatch.ElapsedMilliseconds);
         output.Add("Timestamp", Time.time);
+        //output.Add("Amount of translate ends");
         output.Add("SessionID", "NA");
         output.Add("Email", "NA");
         output.Add("Real time", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));

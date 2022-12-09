@@ -9,8 +9,7 @@ using UnityEngine;
 
 public class TaskCompletionInvoker : MonoBehaviour
 {
-    [SerializeField] private StringReference task;
-
+    [SerializeField] public InteractableTaskReference task;
     public void OnTaskCompleted()
     {
         task.Value = task.Value;

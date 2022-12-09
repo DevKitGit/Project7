@@ -9,10 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 511f7b17fb5c438d99bb281c9aa69882, type: 3}
-  m_Name: condition 1
+  m_Script: {fileID: 11500000, guid: 7a90fe1a3068407291e3f5a3be34912d, type: 3}
+  m_Name: Interactable Task Variable 8
   m_EditorClassIdentifier: 
   developerDescription: 
-  value: 0
-  backupValue: 0
+  value:
+    index: 8
+    taskType: 3
+    taskDescription: Grab the Red Sphere again, and move it to the Yellow Sphere
+  backupValue:
+    index: 0
+    taskType: 0
+    taskDescription: 
   resetOnGameExit: 0

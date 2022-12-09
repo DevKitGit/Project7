@@ -7,6 +7,7 @@ TagManager:
   - Selectable
   - Object
   - Spline
+  - Task
   layers:
   - Default
   - TransparentFX
@@ -18,8 +19,8 @@ TagManager:
   - Hovered
   - Interactable
   - SplineRoot
-  - 
-  - 
+  - SplineBase
+  - Task
   - 
   - 
   - 

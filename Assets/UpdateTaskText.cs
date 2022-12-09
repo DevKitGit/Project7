@@ -9,19 +9,19 @@ public class UpdateTaskText : MonoBehaviour
 {
     
     [SerializeField] private TextMeshPro currentTaskText;
-    [SerializeField] private StringReference currentStringReference;
+    [SerializeField] private InteractableTaskReference currentReferenceDescription;
     private void OnEnable()
     {
-        currentStringReference.RegisterCallback(OnTaskUpdated);
-        currentTaskText.SetText(currentStringReference.Value);
+        currentReferenceDescription.RegisterCallback(OnTaskUpdated);
+        currentTaskText.SetText(currentReferenceDescription.Value.taskDescription);
     }
     private void OnDisable()
     {
-        currentStringReference.UnregisterCallback(OnTaskUpdated);
+        currentReferenceDescription.UnregisterCallback(OnTaskUpdated);
     }
     private void OnTaskUpdated()
     {
-        currentTaskText.SetText(currentStringReference.Value);
+        currentTaskText.SetText(currentReferenceDescription.Value.taskDescription);
         currentTaskText.ForceMeshUpdate();
     }
 }

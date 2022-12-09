@@ -9,10 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 511f7b17fb5c438d99bb281c9aa69882, type: 3}
-  m_Name: condition
+  m_Script: {fileID: 11500000, guid: 7a90fe1a3068407291e3f5a3be34912d, type: 3}
+  m_Name: Interactable Task Variable 11
   m_EditorClassIdentifier: 
   developerDescription: 
-  value: 1
-  backupValue: 0
+  value:
+    index: 11
+    taskType: 1
+    taskDescription: Create Planet A by clicking the corresponding button
+  backupValue:
+    index: 0
+    taskType: 0
+    taskDescription: 
   resetOnGameExit: 0
