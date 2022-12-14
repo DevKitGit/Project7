@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   developerDescription: 
   value: 0
-  backupValue: 0
+  backupValue: 1
   resetOnGameExit: 0
