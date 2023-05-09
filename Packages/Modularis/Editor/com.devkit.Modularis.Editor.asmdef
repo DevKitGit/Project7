@@ -1,0 +1,19 @@
+{
+    "name": "com.devkit.Modularis.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:658aca08b6c96bb4bb436e1cba3937a9",
+        "GUID:54cb1906aeb4e4264bc1d2aa3818a43f"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
